@@ -12,6 +12,8 @@
 		27B7FB871FB48BF1008364EF /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 27B7FB851FB48BF1008364EF /* Main.storyboard */; };
 		27B7FB891FB48BF1008364EF /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 27B7FB881FB48BF1008364EF /* Assets.xcassets */; };
 		27B7FB8C1FB48BF1008364EF /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 27B7FB8A1FB48BF1008364EF /* LaunchScreen.storyboard */; };
+		27B7FB961FB48F9D008364EF /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 27B7FB981FB48F9D008364EF /* Localizable.strings */; };
+		27B7FB9E1FB49EB8008364EF /* CandidateController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27B7FB9D1FB49EB8008364EF /* CandidateController.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -22,6 +24,12 @@
 		27B7FB881FB48BF1008364EF /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		27B7FB8B1FB48BF1008364EF /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		27B7FB8D1FB48BF1008364EF /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		27B7FB971FB48F9D008364EF /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/Localizable.strings; sourceTree = "<group>"; };
+		27B7FB991FB490AD008364EF /* ja */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ja; path = ja.lproj/Main.strings; sourceTree = "<group>"; };
+		27B7FB9A1FB490AD008364EF /* ja */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ja; path = ja.lproj/LaunchScreen.strings; sourceTree = "<group>"; };
+		27B7FB9B1FB490AD008364EF /* ja */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ja; path = ja.lproj/Localizable.strings; sourceTree = "<group>"; };
+		27B7FB9C1FB493CE008364EF /* Base */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = Base; path = Base.lproj/Localizable.strings; sourceTree = "<group>"; };
+		27B7FB9D1FB49EB8008364EF /* CandidateController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CandidateController.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -54,14 +62,24 @@
 		27B7FB801FB48BF1008364EF /* FindIt */ = {
 			isa = PBXGroup;
 			children = (
+				27B7FB931FB48F61008364EF /* strings */,
 				27B7FB811FB48BF1008364EF /* AppDelegate.swift */,
 				27B7FB831FB48BF1008364EF /* ViewController.swift */,
 				27B7FB851FB48BF1008364EF /* Main.storyboard */,
 				27B7FB881FB48BF1008364EF /* Assets.xcassets */,
 				27B7FB8A1FB48BF1008364EF /* LaunchScreen.storyboard */,
 				27B7FB8D1FB48BF1008364EF /* Info.plist */,
+				27B7FB9D1FB49EB8008364EF /* CandidateController.swift */,
 			);
 			path = FindIt;
+			sourceTree = "<group>";
+		};
+		27B7FB931FB48F61008364EF /* strings */ = {
+			isa = PBXGroup;
+			children = (
+				27B7FB981FB48F9D008364EF /* Localizable.strings */,
+			);
+			path = strings;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -102,11 +120,12 @@
 			};
 			buildConfigurationList = 27B7FB791FB48BF1008364EF /* Build configuration list for PBXProject "FindIt" */;
 			compatibilityVersion = "Xcode 8.0";
-			developmentRegion = en;
+			developmentRegion = ja;
 			hasScannedForEncodings = 0;
 			knownRegions = (
 				en,
 				Base,
+				ja,
 			);
 			mainGroup = 27B7FB751FB48BF1008364EF;
 			productRefGroup = 27B7FB7F1FB48BF1008364EF /* Products */;
@@ -123,6 +142,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				27B7FB961FB48F9D008364EF /* Localizable.strings in Resources */,
 				27B7FB8C1FB48BF1008364EF /* LaunchScreen.storyboard in Resources */,
 				27B7FB891FB48BF1008364EF /* Assets.xcassets in Resources */,
 				27B7FB871FB48BF1008364EF /* Main.storyboard in Resources */,
@@ -138,6 +158,7 @@
 			files = (
 				27B7FB841FB48BF1008364EF /* ViewController.swift in Sources */,
 				27B7FB821FB48BF1008364EF /* AppDelegate.swift in Sources */,
+				27B7FB9E1FB49EB8008364EF /* CandidateController.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -148,6 +169,7 @@
 			isa = PBXVariantGroup;
 			children = (
 				27B7FB861FB48BF1008364EF /* Base */,
+				27B7FB991FB490AD008364EF /* ja */,
 			);
 			name = Main.storyboard;
 			sourceTree = "<group>";
@@ -156,8 +178,19 @@
 			isa = PBXVariantGroup;
 			children = (
 				27B7FB8B1FB48BF1008364EF /* Base */,
+				27B7FB9A1FB490AD008364EF /* ja */,
 			);
 			name = LaunchScreen.storyboard;
+			sourceTree = "<group>";
+		};
+		27B7FB981FB48F9D008364EF /* Localizable.strings */ = {
+			isa = PBXVariantGroup;
+			children = (
+				27B7FB971FB48F9D008364EF /* en */,
+				27B7FB9B1FB490AD008364EF /* ja */,
+				27B7FB9C1FB493CE008364EF /* Base */,
+			);
+			name = Localizable.strings;
 			sourceTree = "<group>";
 		};
 /* End PBXVariantGroup section */
@@ -167,6 +200,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_LOCALIZABILITY_NONLOCALIZED = YES;
 				CLANG_ANALYZER_NONNULL = YES;
 				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
@@ -211,7 +245,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 11.1;
+				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
 				MTL_ENABLE_DEBUG_INFO = YES;
 				ONLY_ACTIVE_ARCH = YES;
 				SDKROOT = iphoneos;
@@ -224,6 +258,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_LOCALIZABILITY_NONLOCALIZED = YES;
 				CLANG_ANALYZER_NONNULL = YES;
 				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
@@ -262,7 +297,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 11.1;
+				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				SDKROOT = iphoneos;
 				SWIFT_OPTIMIZATION_LEVEL = "-Owholemodule";
@@ -275,7 +310,9 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = HUS44GT5UN;
 				INFOPLIST_FILE = FindIt/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.hackathon.FindIt;
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -289,7 +326,9 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = HUS44GT5UN;
 				INFOPLIST_FILE = FindIt/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.hackathon.FindIt;
 				PRODUCT_NAME = "$(TARGET_NAME)";

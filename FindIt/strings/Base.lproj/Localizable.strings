@@ -1,0 +1,11 @@
+
+/* 
+  File.strings
+  FindIt
+
+  Created by Koki Nagatani on 2017/11/09.
+  Copyright © 2017年 Koki Nagatani. All rights reserved.
+*/
+
+"main-description" = "探し物はなんですか";
+"find" = "検索";
