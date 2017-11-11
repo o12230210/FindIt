@@ -26,11 +26,8 @@ class CandidateViewController: UIViewController {
         
         let margin : CGFloat = 10.0;
         
-        kolodaView.frame = CGRect(
-            x:margin,
-            y:0,
-            width: self.view.bounds.size.width-margin*2,
-            height:self.view.bounds.size.height-margin)
+        kolodaView.frame = self.view.frame
+
         self.view.addSubview(kolodaView)
 
         print(kolodaView.frame)
