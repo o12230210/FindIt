@@ -10,6 +10,7 @@ import UIKit
 
 class ViewController: UIViewController, UITextFieldDelegate {
     
+    private var titleLabel : UILabel = UILabel()
     private var label : UILabel = UILabel()
     private var field : UITextField = UITextField()
     private var button: UIButton = UIButton()
@@ -22,23 +23,31 @@ class ViewController: UIViewController, UITextFieldDelegate {
     override func viewDidLoad() {
         super.viewDidLoad()
         // Do any additional setup after loading the view, typically from a nib.
+
+        // Label
+        self.titleLabel.frame = CGRect(x:0, y:0, width:self.view.bounds.width, height:self.view.bounds.height/6)
+        self.titleLabel.text = NSLocalizedString("title", comment: "")
+        self.titleLabel.textAlignment = .center
+        self.titleLabel.baselineAdjustment = .alignCenters;
+        self.view.addSubview(self.titleLabel)
         
         // Label
+        self.label.frame = CGRect(x:0, y:self.view.bounds.height/4, width:self.view.bounds.width, height:50)
         self.label.text = NSLocalizedString("main-description", comment: "")
         self.label.sizeToFit()
         self.label.textAlignment = .center
         self.view.addSubview(self.label)
         
         // テキストフィールド
-		self.field.sizeToFit()
-		self.field.text = ""
+        self.field.frame = CGRect(x:0, y:0, width:self.view.bounds.width/4*3, height:50)
         self.field.borderStyle = .roundedRect
         self.field.textAlignment = .center
         self.view.addSubview(self.field)
 		self.field.delegate = self
-        
+        self.field.center = self.view.center
+
         // ボタン
-		self.button.sizeToFit()
+        self.button.frame = CGRect(x:self.view.bounds.width/6, y:self.view.bounds.height/3*2, width:self.view.bounds.width/3*2, height:40)
         self.button.backgroundColor = .orange
         self.button.layer.masksToBounds = true
 		self.button.layer.cornerRadius = 10.0
@@ -52,9 +61,7 @@ class ViewController: UIViewController, UITextFieldDelegate {
 		
 		self.button.addTarget(self, action: #selector(ViewController.onClick(_:)), for:.touchUpInside)
         self.view.addSubview(self.button)
-		
-		self.mainPosition()
-		
+				
 		// スワイプ動作の初期化
 		self.rightSwipe = UISwipeGestureRecognizer(target: self, action: #selector(ViewController.didSwipe(_:)))
 		self.rightSwipe.direction = .right
@@ -76,42 +83,35 @@ class ViewController: UIViewController, UITextFieldDelegate {
 			self.candidateView.removeFromParentViewController()
 			self.candidateView = nil
 		}
-		
+        
+        
 		// コンテナに追加
 		self.candidateView = CandidateViewController()
-		self.candidateView.view.frame = CGRect(x:0, y:self.view.bounds.height/4, width:self.view.bounds.width, height:self.view.bounds.height/4*3)
+		self.candidateView.view.frame = CGRect(x:0, y:0, width:self.view.bounds.width, height:self.view.bounds.height)
 		addChildViewController(self.candidateView)
 		view.addSubview(self.candidateView.view)
 		self.candidateView.didMove(toParentViewController: self)
+        
+        
+        print(self.view.bounds)
+        print(self.candidateView.view.bounds)
+
 
 		return
 	}
 	
-	// メインのViewたちの位置
-	private func mainPosition(){
-		self.label.frame = CGRect(x:0, y:self.view.bounds.height/4, width:self.view.bounds.width, height:50)
-		self.field.frame = CGRect(x:0, y:0, width:self.view.bounds.width/4*3, height:50)
-		self.field.center = self.view.center
-		self.button.frame = CGRect(x:self.view.bounds.width/6, y:self.view.bounds.height/3*2, width:self.view.bounds.width/3*2, height:40)
-	}
-
-	// メインのビューたちが移動する位置
-	private func candidatePosition(){
-		self.label.frame = CGRect(x:0, y:self.view.bounds.height/8, width:self.view.bounds.width, height:50)
-		self.field.isHidden = true
-		self.button.isHidden = true
-	}
-
-	//
+    // MARK:function
 	private func addGesture() {
 		self.view.addGestureRecognizer(self.rightSwipe)
 		self.view.addGestureRecognizer(self.leftSwipe)
 	}
 	
+    private func candidatePosition(){
+        
+    }
 	
 	
 	// MARK:action
-
 	// スワイプ時の処理
 	@objc func didSwipe(_ sender: UISwipeGestureRecognizer) {
 		if sender.direction == .right {
@@ -122,30 +122,17 @@ class ViewController: UIViewController, UITextFieldDelegate {
 		}
 	}
 
-	
 	// ボタンクリック時の動作
-	
     @objc func onClick(_ sender: AnyObject) {
-//		let alertController = UIAlertController(title: "test",message: "test", preferredStyle: UIAlertControllerStyle.alert)
-//		let okAction = UIAlertAction(title: "OK", style: UIAlertActionStyle.default)
-//		alertController.addAction(okAction)
-//		present(alertController,animated: true,completion: nil)
 		
-		self.candidatePosition()
 		self.addCandidateView()
 		
 		// スワイプ動作の追加
-		let rightSwipe = UISwipeGestureRecognizer(target: self, action: #selector(ViewController.didSwipe(_:)))
-		rightSwipe.direction = .right
-		view.addGestureRecognizer(rightSwipe)
-		
-		let leftSwipe = UISwipeGestureRecognizer(target: self, action:  #selector(ViewController.didSwipe(_:)))
-		leftSwipe.direction = .left
-		view.addGestureRecognizer(leftSwipe)
+		view.addGestureRecognizer(self.rightSwipe)
+        view.addGestureRecognizer(self.leftSwipe)
 
 		return
     }
-
 	
 	// MARK:UITextFieldDelegate
 	// キーボードを閉じる
