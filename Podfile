@@ -7,4 +7,6 @@ target 'FindIt' do
 
   # Pods for FindIt
   pod 'Koloda'
+  pod 'Alamofire'
+  pod 'SwiftyJSON'
 end

@@ -7,10 +7,12 @@
 //
 
 import UIKit
+import SwiftyJSON
+
 
 class ViewController: UIViewController, UITextFieldDelegate {
     
-    private var titleLabel : UILabel!
+    private var titleLabel : SpringLabel!
     private var label : UILabel!
     private var field : UITextField!
     private var findButton: UIButton!
@@ -19,7 +21,10 @@ class ViewController: UIViewController, UITextFieldDelegate {
 	private var leftSwipe : UISwipeGestureRecognizer!
 
 	private var candidateView : CandidateViewController!
-	
+    
+    private var connection = Connection()
+    private var message = Message()
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         // Do any additional setup after loading the view, typically from a nib.
@@ -32,7 +37,6 @@ class ViewController: UIViewController, UITextFieldDelegate {
 		
 		self.leftSwipe = UISwipeGestureRecognizer(target: self, action:  #selector(ViewController.didSwipe(_:)))
 		self.leftSwipe.direction = .left
-		
     }
     
     override func didReceiveMemoryWarning() {
@@ -70,12 +74,14 @@ class ViewController: UIViewController, UITextFieldDelegate {
 	
     private func candidatePosition(){
         self.titleLabel.frame = CGRect(x:0, y:0, width:self.view.bounds.width, height:self.view.bounds.height/6)
+        self.titleLabel.animation = "slideUp"
+        self.titleLabel.animate()
     }
     
     private func mainPosition(){
         // Label
         if(self.titleLabel == nil){
-            self.titleLabel = UILabel()
+            self.titleLabel = SpringLabel()
             self.titleLabel.text = NSLocalizedString("title", comment: "")
             self.titleLabel.font = self.titleLabel.font.withSize(50);
             self.titleLabel.textAlignment = .center
@@ -133,7 +139,7 @@ class ViewController: UIViewController, UITextFieldDelegate {
 		if sender.direction == .right {
 		}
 		else if sender.direction == .left {
-			addCandidateView()
+			//addCandidateView()
 		}
 	}
 
@@ -146,6 +152,9 @@ class ViewController: UIViewController, UITextFieldDelegate {
 		// スワイプ動作の追加
 		view.addGestureRecognizer(self.rightSwipe)
         view.addGestureRecognizer(self.leftSwipe)
+        
+        // 送信
+        self.connection.sendItem(str: self.field.text!)
 
 		return
     }
