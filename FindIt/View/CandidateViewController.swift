@@ -12,29 +12,29 @@ import Koloda
 
 class CandidateViewController: UIViewController {
     
-    
-    private var label : UILabel = UILabel()
+    var message : Message!
     
     private var kolodaView = KolodaView()
     
-
+    init(message:Message) {
+        super.init(nibName: nil, bundle: nil)
+        self.message = message
+    }
+    
+    required init?(coder aDecoder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         // Do any additional setup after loading the view, typically from a nib.
         
         self.view.backgroundColor = .white
         
-        let margin : CGFloat = 10.0;
-        
-        kolodaView.frame = self.view.frame
-
         self.view.addSubview(kolodaView)
-
-        print(kolodaView.frame)
-        
+        kolodaView.frame = CGRect(x:0, y:0, width:self.view.bounds.size.width/8*6, height:self.view.bounds.size.height/6*4)
         kolodaView.dataSource = self
         kolodaView.delegate = self
-
     }
     
     override func didReceiveMemoryWarning() {
@@ -63,11 +63,25 @@ class CandidateViewController: UIViewController {
 
 extension CandidateViewController: KolodaViewDelegate {
     func kolodaDidRunOutOfCards(_ koloda: KolodaView) {
-        koloda.reloadData()
+//        koloda.reloadData()
+        print("finish")
     }
     
     func koloda(_ koloda: KolodaView, didSelectCardAt index: Int) {
-        UIApplication.shared.openURL(URL(string: "https://yalantis.com/")!)
+//        UIApplication.shared.openURL(URL(string: "https://yalantis.com/")!)
+        print("71")
+  
+    }
+    
+    func koloda(_ koloda: KolodaView, didSwipeCardAt index: Int, in direction: SwipeResultDirection) {
+        switch direction {
+        case .right:
+            print("Swiped to right!")
+        case .left:
+            print("Swiped to left!")
+        default:
+            return
+        }
     }
 }
 
@@ -75,7 +89,7 @@ extension CandidateViewController: KolodaViewDelegate {
 extension CandidateViewController: KolodaViewDataSource {
         
     func kolodaNumberOfCards(_ koloda:KolodaView) -> Int {
-        return 10
+        return self.message.recvText.count
     }
     
     func kolodaSpeedThatCardShouldDrag(_ koloda: KolodaView) -> DragSpeed {
@@ -86,14 +100,15 @@ extension CandidateViewController: KolodaViewDataSource {
         let view = UIView(frame: koloda.bounds)
         view.backgroundColor = randomColor()
         
-        // Label
-        let date = Date()
-        let calendar = Calendar.current
-        let second = calendar.component(.second, from: date)
-        self.label.text = String(second)
-        self.label.sizeToFit()
-        self.label.textAlignment = .center
-        view.addSubview(self.label)
+        let label = UILabel()
+        label.text = Array(self.message.recvText)[index]["place"]
+        label.center = self.view.center
+        label.font = label.font.withSize(fontSize.title_sub.rawValue);
+        label.sizeToFit()
+
+        view.addSubview(label)
+        
+        print(label.frame)
 
         return view
     }

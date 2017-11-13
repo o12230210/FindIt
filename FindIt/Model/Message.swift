@@ -7,23 +7,15 @@
 //
 
 import Foundation
-import SwiftyJSON
 
 class Message {
-    public var sendText : Any!
-    public var recvText : Any!
-    
+    public var sendText = [[String: String]]()
+    public var recvText = [[String: String]]()
     init(){
         
     }
     
     func parseFromJson(result:Any){
-        let json = JSON(result)
-        
-        for (key, subJson) in json {
-            print("\(key) is \(subJson)")
-            
-        }
 
     }
 }
