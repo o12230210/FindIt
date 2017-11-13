@@ -14,23 +14,30 @@ import SwiftyJSON
 extension UIColor {
     class var theme: UIColor { return #colorLiteral(red: 0.999717176, green: 0.6463285685, blue: 0.007703759708, alpha: 1) }
     class var theme_sub: UIColor { return #colorLiteral(red: 0.9930148721, green: 0.8213359714, blue: 0.02535311319, alpha: 1) }
-
+	class var OKbutton: UIColor { return #colorLiteral(red: 0.3411764801, green: 0.6235294342, blue: 0.1686274558, alpha: 1) }
+	class var NGbutton: UIColor { return #colorLiteral(red: 0.9254902005, green: 0.2352941185, blue: 0.1019607857, alpha: 1) }
 }
 
-enum fontSize : CGFloat {
-    case title_main = 50
-    case title_sub = 25
+struct fontSize {
+	static let title_main : CGFloat = 50
+    static let title_sub : CGFloat = 25
+	static let correctButton : CGFloat = 70
 }
 
-enum viewSize : CGFloat {
-    case fieldHeight = 50
-    case buttonHeight = 55
+struct viewSize  {
+    static let fieldHeight : CGFloat = 50
+    static let buttonHeight : CGFloat = 45
+	static let labelHeight : CGFloat = 50
+	static let candidateMargin : CGFloat = 10
+	static let correctButton : CGFloat = 100	// 丸ばつボタンのサイズ
+
 }
 
 class ViewController: UIViewController, UITextFieldDelegate {
     
-    private var mainView : UIView!
+	private var mainView : UIViewController!
     private var candidateView : CandidateViewController!
+	private var resultView : ResultViewController!
     
     private var titleLabel : SpringLabel!
     private var label : UILabel!
@@ -39,22 +46,32 @@ class ViewController: UIViewController, UITextFieldDelegate {
 	
 	private var rightSwipe : UISwipeGestureRecognizer!
 	private var leftSwipe : UISwipeGestureRecognizer!
-
-    private var connection = Connection()
-    private var message = Message()
+	private var startSwipe : CGPoint!
+	private var endSwipe : CGPoint!
+	
+	private var connection : Connection!
+	var message = Message()
+	var round : Int = 0
     
     override func viewDidLoad() {
         super.viewDidLoad()
         // Do any additional setup after loading the view, typically from a nib.
-				
+		self.connection = Connection(mainViewController:self)
+		self.connection.delegate = self
+		
         self.mainPosition()
         
 		// スワイプ動作の初期化
-		self.rightSwipe = UISwipeGestureRecognizer(target: self, action: #selector(ViewController.didSwipe(_:)))
-		self.rightSwipe.direction = .right
+		let rightSwipe = UISwipeGestureRecognizer(target: self, action: #selector(ViewController.didSwipe(_:)))
+		rightSwipe.direction = .right
 		
-		self.leftSwipe = UISwipeGestureRecognizer(target: self, action:  #selector(ViewController.didSwipe(_:)))
-		self.leftSwipe.direction = .left
+		let leftSwipe = UISwipeGestureRecognizer(target: self, action:  #selector(ViewController.didSwipe(_:)))
+		leftSwipe.direction = .left
+		
+		// スワイプ動作の追加
+		view.addGestureRecognizer(rightSwipe)
+		view.addGestureRecognizer(leftSwipe)
+
     }
     
     override func didReceiveMemoryWarning() {
@@ -63,12 +80,11 @@ class ViewController: UIViewController, UITextFieldDelegate {
     }
 	
     // MARK:function
-	private func addGesture() {
-		self.view.addGestureRecognizer(self.rightSwipe)
-		self.view.addGestureRecognizer(self.leftSwipe)
+	func setRecvText(){
+		self.connection.setRecvText(str: self.field.text!,round: self.round)
+		self.round+=1
 	}
 	
-
     // 選択肢をだすビューを表示
     private func addCandidateView(){
         // 古いビューを削除
@@ -78,57 +94,63 @@ class ViewController: UIViewController, UITextFieldDelegate {
         }
         
         // コンテナに追加
-        self.candidateView = CandidateViewController(message:self.message)
-        self.candidateView.view.frame = CGRect(x:self.view.bounds.size.width/8 , y:self.view.bounds.size.height/6, width:self.view.bounds.size.width/8*6, height:self.view.bounds.size.height/6*4)
-        addChildViewController(self.candidateView)
+		self.candidateView = CandidateViewController(mainViewController:self)
+//        self.candidateView.view.frame = CGRect(x:self.view.bounds.size.width/8 , y:, width:self.view.bounds.size.width/8*6, height:self.view.bounds.size.height/6*4)
+		self.candidateView.view.frame = CGRect(x:viewSize.candidateMargin , y:self.view.bounds.size.height/6, width:self.view.bounds.size.width-viewSize.candidateMargin*2, height:self.view.bounds.size.height/6*4)
+		addChildViewController(self.candidateView)
         view.addSubview(self.candidateView.view)
         self.candidateView.didMove(toParentViewController: self)
-        
-        print(self.view.bounds)
-        print(self.candidateView.view.frame)
-        
+		
         return
     }
     
     
     private func mainPosition(){
+		if(self.resultView != nil) {
+			self.resultView.view.isHidden = true
+			self.resultView = nil
+		}
+		
         // Label
         if(self.titleLabel == nil){
             self.titleLabel = SpringLabel()
-            self.titleLabel.text = NSLocalizedString("title", comment: "")
-            self.titleLabel.font = self.titleLabel.font.withSize(fontSize.title_main.rawValue);
+            self.titleLabel.text = NSLocalizedString("Find It!", comment: "")
+            self.titleLabel.font = self.titleLabel.font.withSize(fontSize.title_main);
             self.titleLabel.textAlignment = .center
             self.titleLabel.baselineAdjustment = .alignCenters;
             self.view.addSubview(self.titleLabel)
         }
-    
-        self.titleLabel.frame = CGRect(x:0, y:0, width:self.view.bounds.width, height:self.view.bounds.height/6*2)
+        self.titleLabel.frame = CGRect(x:0, y:0, width:self.view.bounds.width, height:self.view.bounds.height/5*2)
         
         if(self.mainView == nil){
-            self.mainView = UIView(frame: CGRect(x: 10,y: 10, width:200, height:200))
-            self.mainView.backgroundColor = .black
+			self.mainView = UIViewController()
+            self.mainView.view.frame = CGRect(x: 0,y: self.view.bounds.height/5*2, width:self.view.bounds.width, height:self.view.bounds.height/5*1)
+//			self.mainView.backgroundColor = .gray
+			self.view.addSubview(self.mainView.view)
             // Label
             if(self.label == nil){
                 self.label = UILabel()
-                self.label.frame = CGRect(x:0, y:self.view.bounds.height/6*2, width:self.view.bounds.width, height:50)
-                self.label.text = NSLocalizedString("main-description", comment: "")
+                self.label.frame = CGRect(x:0, y:0, width:self.view.bounds.width, height:viewSize.labelHeight)
+                self.label.text = NSLocalizedString("探しものは何ですか?", comment: "")
                 self.label.font = self.label.font.withSize(20);
                 self.label.textAlignment = .center
-                self.mainView.addSubview(self.label)
+                self.mainView.view.addSubview(self.label)
             }
-            
+			
             // テキストフィールド
             if(self.field == nil){
                 self.field = UITextField()
-                self.field.frame = CGRect(x:0, y:0, width:self.view.bounds.width/4*3, height:viewSize.fieldHeight.rawValue)
+                self.field.frame = CGRect(x:0, y:viewSize.labelHeight, width:self.view.bounds.width/4*3, height:viewSize.fieldHeight)
                 self.field.borderStyle = .roundedRect
                 self.field.textAlignment = .center
-                self.mainView.addSubview(self.field)
+				self.field.center.x = self.view.center.x
+
+				self.mainView.view.addSubview(self.field)
                 self.field.delegate = self
-                self.field.center = self.view.center
+			
             }
         } else {
-            self.mainView.isHidden = false
+            self.mainView.view.isHidden = false
         }
         
         // ボタン
@@ -144,15 +166,15 @@ class ViewController: UIViewController, UITextFieldDelegate {
         } else {
             self.findButton.isHidden = false
         }
-        self.findButton.frame = CGRect(x:self.view.bounds.width/6, y:self.view.bounds.height/5*3, width:self.view.bounds.width/3*2, height:viewSize.buttonHeight.rawValue)
+        self.findButton.frame = CGRect(x:self.view.bounds.width/6, y:self.view.bounds.height/5*3, width:self.view.bounds.width/3*2, height:viewSize.buttonHeight)
         self.findButton.backgroundColor = .theme
         //   通常
-        self.findButton.setTitle(NSLocalizedString("find", comment: ""), for: .normal)
+        self.findButton.setTitle(NSLocalizedString("検索", comment: ""), for: .normal)
         
     }
     
     private func candidatePosition(){
-        self.mainView.isHidden = true
+        self.mainView.view.isHidden = true
         
         self.titleLabel.frame = CGRect(x:0, y:0, width:self.view.bounds.width, height:self.view.bounds.height/6)
         self.titleLabel.font = self.titleLabel.font.withSize(30);
@@ -160,28 +182,33 @@ class ViewController: UIViewController, UITextFieldDelegate {
         self.titleLabel.animate()
         
         //   ボタンを検索中にする　→
-        self.findButton.frame = CGRect(x:self.view.bounds.width/6, y:self.view.bounds.height/7*6, width:self.view.bounds.width/3*2, height:viewSize.fieldHeight.rawValue)
+        self.findButton.frame = CGRect(x:self.view.bounds.width/6, y:self.view.bounds.height/7*6, width:self.view.bounds.width/3*2, height:viewSize.fieldHeight)
         self.findButton.setTitle(NSLocalizedString("検索中", comment: ""), for: .normal)
         self.findButton.animation = "slideDown"
         self.findButton.animate()
         self.findButton.backgroundColor = .theme_sub
+		
     }
     
     private func searchedPosition(){
         //   ボタンをあきらめるにする
         self.findButton.setTitle(NSLocalizedString("あきらめる", comment: ""), for: .normal)
 
+		self.addCandidateView()
     }
     
-    private func ResultPosition(result: Bool) {
-        self.findButton.isHidden = true
-    
-    }
-    
-    private func sendToServer(str:String){
-        // 受信したJSONのパース
-        
-        
+    public func ResultPosition(result: Bool) {
+		if (self.candidateView != nil) {
+			// ★情報の送信
+			
+			self.findButton.isHidden = true
+			self.candidateView.view.isHidden = true
+			self.candidateView = nil
+
+			self.resultView = ResultViewController(result:result)
+			
+			self.view.addSubview(self.resultView.view)
+		}
     }
 	
 	
@@ -189,62 +216,52 @@ class ViewController: UIViewController, UITextFieldDelegate {
 	// スワイプ時の処理
 	@objc func didSwipe(_ sender: UISwipeGestureRecognizer) {
 		if sender.direction == .right {
-            //addCandidateView()
-            let alertController = UIAlertController(title: "test",message: "あきらめて踊ろう", preferredStyle: UIAlertControllerStyle.alert)
-            let cancelButton = UIAlertAction(title: "CANCEL", style: UIAlertActionStyle.cancel, handler: nil)
-            alertController.addAction(cancelButton)
-            present(alertController,animated: true,completion: nil)
+//			let alertController = UIAlertController(title: "test",message: "あきらめて踊ろう", preferredStyle: UIAlertControllerStyle.alert)
+//			let cancelButton = UIAlertAction(title: "CANCEL", style: UIAlertActionStyle.cancel, handler: nil)
+//			alertController.addAction(cancelButton)
+//			present(alertController,animated: true,completion: nil)
 
+			print("didSwipe")
+			// 候補表示中のとき
+			if(self.candidateView != nil){
+				self.ResultPosition(result: false)
+			}
+			else if (self.resultView != nil){
+				self.mainPosition()
+			}
 		}
 		else if sender.direction == .left {
+		}
+	}
+	
+	func panGesture(_ sender: UIPanGestureRecognizer) {
+		
+		if (sender.state == .began) {
+			self.startSwipe = sender.location(in: self.view)
+		}
+		else if (sender.state == .ended) {
+			self.endSwipe = sender.location(in: self.view)
+			var dx = self.endSwipe.x - self.startSwipe.x
+			var dy = self.endSwipe.y - self.startSwipe.y
+			var distance = sqrt(dx*dx + dy*dy );
+			print(distance)
 		}
 	}
 
 	// ボタンクリック時の動作
     @objc func onClick(_ sender: AnyObject) {
 		
-        let listUrl = "https://kuromusubi.com/findit/?item="
-            + self.field.text!.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed)!
-        Alamofire.request(listUrl).responseJSON{ response in
-            
-            if let dict = response.result.value as? Dictionary<String, AnyObject> {
-                // 変数keysにdictのkeyのみを取り出す
-                var keys : Array = Array(dict.keys)
-                // keysを昇順でソートする
-                keys.sort(by:{$0 < $1})
-                
-            
-            
-            let json = JSON(response.result.value)
-            
-            var recvText = [[String: String]]()
-                
-            for i in keys {
-                let id = json[i]["id"].int!
-                let place = json[i]["place"].string!
-                
-                recvText.append(["id":String(id),"place":place])
-        
-            }
-            
-                
-                
-            print(recvText)
-            
-            self.message.recvText = recvText
-
-            self.addCandidateView()
-            self.searchedPosition()
-
-            }
-        }
-        
-        self.candidatePosition();
-		
-        // スワイプ動作の追加
-        view.addGestureRecognizer(self.rightSwipe)
-        view.addGestureRecognizer(self.leftSwipe)
-
+		// メイン画面
+		if (self.candidateView == nil) {
+			// 表示を変更
+			self.candidatePosition()
+			// 検索開始
+			self.setRecvText()
+		}
+		else {
+			// 候補表示中
+			self.ResultPosition(result: false)
+		}
 		return
     }
 	
@@ -256,3 +273,9 @@ class ViewController: UIViewController, UITextFieldDelegate {
 	}
 }
 
+extension ViewController: ConnectionDelegate {
+	func done() {
+		// 付箋たちを出す
+		self.searchedPosition()
+	}
+}

@@ -12,14 +12,23 @@ import Koloda
 
 class CandidateViewController: UIViewController {
     
-    var message : Message!
+    var mainViewController : ViewController!
     
-    private var kolodaView = KolodaView()
+	private var kolodaView : KolodaView!
+	private let OKbutton = UIButton()
+	private let NGbutton = UIButton()
+	
+	private var frame : CGRect!
     
-    init(message:Message) {
-        super.init(nibName: nil, bundle: nil)
-        self.message = message
+    init(mainViewController : ViewController) {
+        self.mainViewController = mainViewController
+
+		super.init(nibName: nil, bundle: nil)
     }
+	
+	deinit {
+		self.kolodaView = nil
+	}
     
     required init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
@@ -29,13 +38,48 @@ class CandidateViewController: UIViewController {
         super.viewDidLoad()
         // Do any additional setup after loading the view, typically from a nib.
         
-        self.view.backgroundColor = .white
-        
+//        self.view.backgroundColor = .red
+		self.frame = CGRect(x:viewSize.candidateMargin, y:0, width:self.view.frame.size.width-viewSize.candidateMargin*4, height:self.view.frame.size.width-viewSize.candidateMargin*4)
+		
+		self.kolodaView = KolodaView()
         self.view.addSubview(kolodaView)
-        kolodaView.frame = CGRect(x:0, y:0, width:self.view.bounds.size.width/8*6, height:self.view.bounds.size.height/6*4)
+        kolodaView.frame = self.frame
+			//		kolodaView.center = self.view.center
+//		kolodaView.widthAnchor.constraint(equalTo:self.view.widthAnchor, constant: -10.0).isActive = true
+		kolodaView.layer.shadowColor = UIColor.gray.cgColor        // シャドウカラー
+		kolodaView.layer.shadowOffset = CGSize(width:1, height:1);        //  シャドウサイズ
+		kolodaView.layer.shadowOpacity = 1.0;        // 透明度
+		kolodaView.layer.shadowRadius = 1;        // 角度
         kolodaView.dataSource = self
         kolodaView.delegate = self
+		
+		OKbutton.frame = CGRect(x:self.view.frame.size.width/2+20, y:self.view.frame.size.width-viewSize.candidateMargin*4+20, width:viewSize.correctButton, height:viewSize.correctButton)
+		OKbutton.setTitle(NSLocalizedString("⚪︎", comment: ""), for: .normal)
+		OKbutton.setTitleColor(.white, for: .normal)
+		OKbutton.backgroundColor = .OKbutton
+		OKbutton.titleLabel?.font = OKbutton.titleLabel?.font.withSize(fontSize.correctButton);
+		OKbutton.layer.cornerRadius = 10.0
+		OKbutton.addTarget(self, action: #selector(CandidateViewController.onOKClick(_:)), for:.touchUpInside)
+		self.view.addSubview(OKbutton)
+		
+		NGbutton.frame = CGRect(x:self.view.frame.size.width/2-viewSize.correctButton-20, y:self.view.frame.size.width-viewSize.candidateMargin*4+20, width:viewSize.correctButton, height:viewSize.correctButton)
+		NGbutton.backgroundColor = .NGbutton
+		NGbutton.setTitle(NSLocalizedString("×", comment: ""), for: .normal)
+		NGbutton.setTitleColor(.white, for: .normal)
+		NGbutton.titleLabel?.font = NGbutton.titleLabel?.font.withSize(fontSize.correctButton);
+		NGbutton.layer.cornerRadius = 10.0
+		NGbutton.addTarget(self, action: #selector(CandidateViewController.onNGClick(_:)), for:.touchUpInside)
+		self.view.addSubview(NGbutton)
     }
+	
+	@objc func onOKClick(_ sender: AnyObject) {
+//		self.kolodaView.swipe(_:.right, force: false)
+		self.mainViewController.ResultPosition(result:true)
+	}
+	@objc func onNGClick(_ sender: AnyObject) {
+		self.kolodaView.swipe(_:.left, force: false)
+	}
+
     
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
@@ -45,40 +89,31 @@ class CandidateViewController: UIViewController {
     // MARK:function
     
     // MARK:action
-    @objc func onClick(_ sender: AnyObject) {
-        
-        
-        return
-        
-    }
-    
-    deinit{
-        //ここで解放処理
-        print("★");
-    }
-    
 }
 
 
 
 extension CandidateViewController: KolodaViewDelegate {
     func kolodaDidRunOutOfCards(_ koloda: KolodaView) {
-//        koloda.reloadData()
+		self.mainViewController.setRecvText()
+        koloda.reloadData()
         print("finish")
+//		self.mainViewController.ResultPosition(result:false)
     }
     
     func koloda(_ koloda: KolodaView, didSelectCardAt index: Int) {
 //        UIApplication.shared.openURL(URL(string: "https://yalantis.com/")!)
-        print("71")
-  
     }
     
     func koloda(_ koloda: KolodaView, didSwipeCardAt index: Int, in direction: SwipeResultDirection) {
         switch direction {
         case .right:
-            print("Swiped to right!")
+			print("Swiped to right! : あった")
+			self.mainViewController.ResultPosition(result:true)
         case .left:
-            print("Swiped to left!")
+			print("Swiped to left! : なかった")
+//			self.mainViewController.ResultPosition(result:false)
+			
         default:
             return
         }
@@ -89,7 +124,7 @@ extension CandidateViewController: KolodaViewDelegate {
 extension CandidateViewController: KolodaViewDataSource {
         
     func kolodaNumberOfCards(_ koloda:KolodaView) -> Int {
-        return self.message.recvText.count
+        return self.mainViewController.message.recvText.count
     }
     
     func kolodaSpeedThatCardShouldDrag(_ koloda: KolodaView) -> DragSpeed {
@@ -98,18 +133,16 @@ extension CandidateViewController: KolodaViewDataSource {
     
     func koloda(_ koloda: KolodaView, viewForCardAt index: Int) -> UIView {
         let view = UIView(frame: koloda.bounds)
-        view.backgroundColor = randomColor()
-        
+//        view.backgroundColor = randomColor()
+		view.backgroundColor = .white
+		
         let label = UILabel()
-        label.text = Array(self.message.recvText)[index]["place"]
-        label.center = self.view.center
-        label.font = label.font.withSize(fontSize.title_sub.rawValue);
-        label.sizeToFit()
-
+        label.text = Array(self.mainViewController.message.recvText)[index]["place"]
+		label.font = label.font.withSize(fontSize.title_sub);
+		label.frame = self.frame
+		label.textAlignment = .center
         view.addSubview(label)
-        
-        print(label.frame)
-
+		
         return view
     }
     

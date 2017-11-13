@@ -46,6 +46,7 @@
 		27B7FB8C1FB48BF1008364EF /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 27B7FB8A1FB48BF1008364EF /* LaunchScreen.storyboard */; };
 		27B7FB961FB48F9D008364EF /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 27B7FB981FB48F9D008364EF /* Localizable.strings */; };
 		27B7FB9E1FB49EB8008364EF /* CandidateViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27B7FB9D1FB49EB8008364EF /* CandidateViewController.swift */; };
+		B8B828501FB93A7B006C4895 /* ResultViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B8B8284F1FB93A7B006C4895 /* ResultViewController.swift */; };
 		D528FB340C6BF046BC01BDD1 /* Pods_FindIt.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6926856F4079692F5D9B3A94 /* Pods_FindIt.framework */; };
 /* End PBXBuildFile section */
 
@@ -98,6 +99,7 @@
 		27B7FB9C1FB493CE008364EF /* Base */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = Base; path = Base.lproj/Localizable.strings; sourceTree = "<group>"; };
 		27B7FB9D1FB49EB8008364EF /* CandidateViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CandidateViewController.swift; sourceTree = "<group>"; };
 		6926856F4079692F5D9B3A94 /* Pods_FindIt.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_FindIt.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		B8B8284F1FB93A7B006C4895 /* ResultViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ResultViewController.swift; sourceTree = "<group>"; };
 		C291109AE330D343B9CA6583 /* Pods-FindIt.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-FindIt.release.xcconfig"; path = "Pods/Target Support Files/Pods-FindIt/Pods-FindIt.release.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -232,6 +234,7 @@
 			children = (
 				27B7FB831FB48BF1008364EF /* ViewController.swift */,
 				27B7FB9D1FB49EB8008364EF /* CandidateViewController.swift */,
+				B8B8284F1FB93A7B006C4895 /* ResultViewController.swift */,
 			);
 			path = View;
 			sourceTree = "<group>";
@@ -416,6 +419,7 @@
 				171EC5691FB6B00100E37809 /* AsyncImageView.swift in Sources */,
 				171EC5541FB6B00100E37809 /* DesignableLabel.swift in Sources */,
 				171EC5501FB6B00100E37809 /* TransitionZoom.swift in Sources */,
+				B8B828501FB93A7B006C4895 /* ResultViewController.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
