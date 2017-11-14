@@ -16,12 +16,14 @@ extension UIColor {
     class var theme_sub: UIColor { return #colorLiteral(red: 0.9930148721, green: 0.8213359714, blue: 0.02535311319, alpha: 1) }
 	class var OKbutton: UIColor { return #colorLiteral(red: 0.3411764801, green: 0.6235294342, blue: 0.1686274558, alpha: 1) }
 	class var NGbutton: UIColor { return #colorLiteral(red: 0.9254902005, green: 0.2352941185, blue: 0.1019607857, alpha: 1) }
+	class var card : UIColor { return #colorLiteral(red: 0.9905192256, green: 0.9350119233, blue: 0.4534321427, alpha: 1) }
 }
 
 struct fontSize {
 	static let title_main : CGFloat = 50
     static let title_sub : CGFloat = 25
 	static let correctButton : CGFloat = 70
+	static let card : CGFloat = 40
 }
 
 struct viewSize  {
@@ -29,7 +31,7 @@ struct viewSize  {
     static let buttonHeight : CGFloat = 45
 	static let labelHeight : CGFloat = 50
 	static let candidateMargin : CGFloat = 10
-	static let correctButton : CGFloat = 100	// 丸ばつボタンのサイズ
+	static let correctButton : CGFloat = 70	// 丸ばつボタンのサイズ
 
 }
 
@@ -81,7 +83,7 @@ class ViewController: UIViewController, UITextFieldDelegate {
 	
     // MARK:function
 	func setRecvText(){
-		self.connection.setRecvText(str: self.field.text!,round: self.round)
+		self.connection.setRecvText(str: self.field.text!)
 		self.round+=1
 	}
 	
@@ -89,13 +91,13 @@ class ViewController: UIViewController, UITextFieldDelegate {
     private func addCandidateView(){
         // 古いビューを削除
         if(self.candidateView != nil) {
+			self.candidateView.view.removeFromSuperview()
             self.candidateView.removeFromParentViewController()
             self.candidateView = nil
         }
         
         // コンテナに追加
 		self.candidateView = CandidateViewController(mainViewController:self)
-//        self.candidateView.view.frame = CGRect(x:self.view.bounds.size.width/8 , y:, width:self.view.bounds.size.width/8*6, height:self.view.bounds.size.height/6*4)
 		self.candidateView.view.frame = CGRect(x:viewSize.candidateMargin , y:self.view.bounds.size.height/6, width:self.view.bounds.size.width-viewSize.candidateMargin*2, height:self.view.bounds.size.height/6*4)
 		addChildViewController(self.candidateView)
         view.addSubview(self.candidateView.view)
@@ -106,26 +108,19 @@ class ViewController: UIViewController, UITextFieldDelegate {
     
     
     private func mainPosition(){
-		if(self.resultView != nil) {
-			self.resultView.view.isHidden = true
-			self.resultView = nil
-		}
-		
         // Label
         if(self.titleLabel == nil){
             self.titleLabel = SpringLabel()
             self.titleLabel.text = NSLocalizedString("Find It!", comment: "")
-            self.titleLabel.font = self.titleLabel.font.withSize(fontSize.title_main);
             self.titleLabel.textAlignment = .center
-            self.titleLabel.baselineAdjustment = .alignCenters;
             self.view.addSubview(self.titleLabel)
         }
-        self.titleLabel.frame = CGRect(x:0, y:0, width:self.view.bounds.width, height:self.view.bounds.height/5*2)
+		self.titleLabel.font = self.titleLabel.font.withSize(fontSize.title_main);
+		self.titleLabel.frame = CGRect(x:0, y:0, width:self.view.bounds.width, height:self.view.bounds.height/5*2)
         
         if(self.mainView == nil){
 			self.mainView = UIViewController()
             self.mainView.view.frame = CGRect(x: 0,y: self.view.bounds.height/5*2, width:self.view.bounds.width, height:self.view.bounds.height/5*1)
-//			self.mainView.backgroundColor = .gray
 			self.view.addSubview(self.mainView.view)
             // Label
             if(self.label == nil){
@@ -136,6 +131,8 @@ class ViewController: UIViewController, UITextFieldDelegate {
                 self.label.textAlignment = .center
                 self.mainView.view.addSubview(self.label)
             }
+			self.titleLabel.animation = "squeezeDown"
+			self.titleLabel.animate()
 			
             // テキストフィールド
             if(self.field == nil){
@@ -147,7 +144,6 @@ class ViewController: UIViewController, UITextFieldDelegate {
 
 				self.mainView.view.addSubview(self.field)
                 self.field.delegate = self
-			
             }
         } else {
             self.mainView.view.isHidden = false
@@ -166,12 +162,30 @@ class ViewController: UIViewController, UITextFieldDelegate {
         } else {
             self.findButton.isHidden = false
         }
-        self.findButton.frame = CGRect(x:self.view.bounds.width/6, y:self.view.bounds.height/5*3, width:self.view.bounds.width/3*2, height:viewSize.buttonHeight)
-        self.findButton.backgroundColor = .theme
+        self.findButton.frame = CGRect(x:0, y:self.view.bounds.height/5*3, width:self.view.bounds.width/3*2, height:viewSize.buttonHeight)
+		self.findButton.center.x = self.view.center.x
+		self.findButton.backgroundColor = .theme
         //   通常
         self.findButton.setTitle(NSLocalizedString("検索", comment: ""), for: .normal)
-        
-    }
+		self.findButton.animation = "squeezeUp"
+		self.findButton.animate()
+		
+		
+		if(self.candidateView != nil) {
+			UIView.transition(from: self.candidateView.view, to: self.mainView.view, duration: 0.6, options: .curveLinear, completion: { _ in
+				self.candidateView.willMove(toParentViewController: nil)
+				self.candidateView.view.removeFromSuperview()
+				self.candidateView.removeFromParentViewController()
+				self.candidateView = nil
+			})
+		}
+		
+		if(self.resultView != nil) {
+			self.resultView.view.removeFromSuperview()
+			self.resultView.removeFromParentViewController()
+			self.resultView = nil
+		}
+	}
     
     private func candidatePosition(){
         self.mainView.view.isHidden = true
@@ -182,7 +196,8 @@ class ViewController: UIViewController, UITextFieldDelegate {
         self.titleLabel.animate()
         
         //   ボタンを検索中にする　→
-        self.findButton.frame = CGRect(x:self.view.bounds.width/6, y:self.view.bounds.height/7*6, width:self.view.bounds.width/3*2, height:viewSize.fieldHeight)
+        self.findButton.frame = CGRect(x:0, y:self.view.bounds.height/7*6, width:self.view.bounds.width/3*2, height:viewSize.fieldHeight)
+		self.findButton.center.x = self.view.center.x
         self.findButton.setTitle(NSLocalizedString("検索中", comment: ""), for: .normal)
         self.findButton.animation = "slideDown"
         self.findButton.animate()
@@ -191,6 +206,8 @@ class ViewController: UIViewController, UITextFieldDelegate {
     }
     
     private func searchedPosition(){
+		self.mainView.view.isHidden = true
+		
         //   ボタンをあきらめるにする
         self.findButton.setTitle(NSLocalizedString("あきらめる", comment: ""), for: .normal)
 
@@ -198,16 +215,20 @@ class ViewController: UIViewController, UITextFieldDelegate {
     }
     
     public func ResultPosition(result: Bool) {
+		self.mainView.view.isHidden = true
+		
 		if (self.candidateView != nil) {
 			// ★情報の送信
 			
 			self.findButton.isHidden = true
-			self.candidateView.view.isHidden = true
+			self.candidateView.view.removeFromSuperview()
+			self.candidateView.removeFromParentViewController()
 			self.candidateView = nil
 
 			self.resultView = ResultViewController(result:result)
-			
+			self.addChildViewController(self.resultView)
 			self.view.addSubview(self.resultView.view)
+			self.resultView.didMove(toParentViewController: self)
 		}
     }
 	
@@ -223,12 +244,7 @@ class ViewController: UIViewController, UITextFieldDelegate {
 
 			print("didSwipe")
 			// 候補表示中のとき
-			if(self.candidateView != nil){
-				self.ResultPosition(result: false)
-			}
-			else if (self.resultView != nil){
-				self.mainPosition()
-			}
+			self.mainPosition()
 		}
 		else if sender.direction == .left {
 		}

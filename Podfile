@@ -9,4 +9,5 @@ target 'FindIt' do
   pod 'Koloda'
   pod 'Alamofire'
   pod 'SwiftyJSON'
+  pod 'RealmSwift'
 end

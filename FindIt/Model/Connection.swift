@@ -26,6 +26,36 @@ class Connection {
 	required init?(coder aDecoder: NSCoder) {
 		fatalError("init(coder:) has not been implemented")
 	}
+
+	
+	func setRecvText(str:String){
+		var recvText = [[String: String]]()
+		
+		let listUrl = "https://kuromusubi.com/findit/?item="
+			+ str.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed)!
+		Alamofire.request(listUrl).responseJSON{ response in
+			
+			if let dict = response.result.value as? Dictionary<String, AnyObject> {
+				// 変数keysにdictのkeyのみを取り出す
+				var keys : Array = Array(dict.keys)
+				// keysを昇順でソートする
+				keys.sort(by:{$0 < $1})
+				let json = JSON(response.result.value)
+				for i in keys {
+					let id = json[i]["id"].int!
+					let place = json[i]["place"].string!
+					
+					recvText.append(["id":String(id),"place":place])
+				}
+				
+				print("receiveDone")
+				
+				self.mainViewController.message.recvText = recvText
+				self.delegate?.done()
+			}
+		}
+	}
+
 	
 	func setRecvText(str:String, round:Int){
 		var recvText = [[String: String]]()
@@ -47,6 +77,8 @@ class Connection {
 					
 					recvText.append(["id":String(id),"place":place])
 				}
+				
+				print("receiveDone")
 				
 				self.mainViewController.message.recvText = recvText
 				self.delegate?.done()

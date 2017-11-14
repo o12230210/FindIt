@@ -53,21 +53,21 @@ class CandidateViewController: UIViewController {
         kolodaView.dataSource = self
         kolodaView.delegate = self
 		
-		OKbutton.frame = CGRect(x:self.view.frame.size.width/2+20, y:self.view.frame.size.width-viewSize.candidateMargin*4+20, width:viewSize.correctButton, height:viewSize.correctButton)
+		OKbutton.frame = CGRect(x:self.view.frame.size.width/2+10, y:self.view.frame.size.width-viewSize.candidateMargin*4+35, width:viewSize.correctButton, height:viewSize.correctButton)
 		OKbutton.setTitle(NSLocalizedString("⚪︎", comment: ""), for: .normal)
-		OKbutton.setTitleColor(.white, for: .normal)
-		OKbutton.backgroundColor = .OKbutton
+		OKbutton.setTitleColor(.OKbutton, for: .normal)
 		OKbutton.titleLabel?.font = OKbutton.titleLabel?.font.withSize(fontSize.correctButton);
-		OKbutton.layer.cornerRadius = 10.0
+		OKbutton.titleLabel?.textAlignment = .center;
+		OKbutton.titleLabel?.baselineAdjustment = .alignCenters;
 		OKbutton.addTarget(self, action: #selector(CandidateViewController.onOKClick(_:)), for:.touchUpInside)
 		self.view.addSubview(OKbutton)
-		
-		NGbutton.frame = CGRect(x:self.view.frame.size.width/2-viewSize.correctButton-20, y:self.view.frame.size.width-viewSize.candidateMargin*4+20, width:viewSize.correctButton, height:viewSize.correctButton)
-		NGbutton.backgroundColor = .NGbutton
+
+		NGbutton.frame = CGRect(x:self.view.frame.size.width/2-viewSize.correctButton-20, y:self.view.frame.size.width-viewSize.candidateMargin*4+30, width:viewSize.correctButton, height:viewSize.correctButton)
 		NGbutton.setTitle(NSLocalizedString("×", comment: ""), for: .normal)
-		NGbutton.setTitleColor(.white, for: .normal)
+		NGbutton.setTitleColor(.NGbutton, for: .normal)
 		NGbutton.titleLabel?.font = NGbutton.titleLabel?.font.withSize(fontSize.correctButton);
-		NGbutton.layer.cornerRadius = 10.0
+		NGbutton.titleLabel?.textAlignment = .center;
+		NGbutton.titleLabel?.baselineAdjustment = .alignCenters;
 		NGbutton.addTarget(self, action: #selector(CandidateViewController.onNGClick(_:)), for:.touchUpInside)
 		self.view.addSubview(NGbutton)
     }
@@ -117,7 +117,7 @@ extension CandidateViewController: KolodaViewDelegate {
         default:
             return
         }
-    }
+	}
 }
 
 
@@ -133,25 +133,31 @@ extension CandidateViewController: KolodaViewDataSource {
     
     func koloda(_ koloda: KolodaView, viewForCardAt index: Int) -> UIView {
         let view = UIView(frame: koloda.bounds)
-//        view.backgroundColor = randomColor()
-		view.backgroundColor = .white
+        view.backgroundColor = randomColor()
+//		view.backgroundColor = .white
+//		view.backgroundColor = .card
 		
         let label = UILabel()
         label.text = Array(self.mainViewController.message.recvText)[index]["place"]
-		label.font = label.font.withSize(fontSize.title_sub);
+		label.font = label.font.withSize(fontSize.card);
 		label.frame = self.frame
 		label.textAlignment = .center
         view.addSubview(label)
 		
         return view
     }
-    
+	
     func randomColor() -> UIColor {
+		print(UIColor(red: randomFloat(), green: randomFloat(), blue: randomFloat(), alpha: 1))
         return UIColor(red: randomFloat(), green: randomFloat(), blue: randomFloat(), alpha: 1)
     }
     
     func randomFloat() -> CGFloat {
-        return CGFloat(Float(arc4random()) / Float(UInt32.max))
+		let upper : UInt32 = 100
+		let lower : UInt32 = 80
+		
+		return CGFloat(arc4random_uniform(upper - lower) + lower) / CGFloat(upper)
+		//        return CGFloat(Float(arc4random()) / Float(UInt32.max))
     }
 
 //
