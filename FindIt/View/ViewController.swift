@@ -58,7 +58,7 @@ class ViewController: UIViewController, UITextFieldDelegate {
     override func viewDidLoad() {
         super.viewDidLoad()
         // Do any additional setup after loading the view, typically from a nib.
-		self.connection = Connection(mainViewController:self)
+		self.connection = Connection()
 		self.connection.delegate = self
 		
         self.mainPosition()
@@ -70,13 +70,14 @@ class ViewController: UIViewController, UITextFieldDelegate {
 		let leftSwipe = UISwipeGestureRecognizer(target: self, action:  #selector(ViewController.didSwipe(_:)))
 		leftSwipe.direction = .left
 		
+        
 		// スワイプ動作の追加
 		view.addGestureRecognizer(rightSwipe)
 		view.addGestureRecognizer(leftSwipe)
 
     }
     
-    override func didReceiveMemoryWarning() {
+    override func didReceiveMemoryWarning()  {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
     }
@@ -170,7 +171,19 @@ class ViewController: UIViewController, UITextFieldDelegate {
 		self.findButton.animation = "squeezeUp"
 		self.findButton.animate()
 		
-		
+        // 設定アイコン
+        // Buttonが画面の中央で横幅いっぱいのサイズになるように設定
+        let settingButton = UIButton()
+        settingButton.frame = CGRect(x:self.view.frame.size.width-50, y:0,
+                              width:30, height:30)
+        settingButton.setImage(UIImage(named: "SettingIcon"), for: .normal)
+        settingButton.imageView?.contentMode = .scaleAspectFit
+        self.mainView.view.addSubview(settingButton)
+        
+        // タップされたときのactionをセット
+        settingButton.addTarget(self, action: #selector(ViewController.settingButtonTapped(sender:)), for: .touchUpInside)
+
+        // いらないビューが出ていたら削除
 		if(self.candidateView != nil) {
 			UIView.transition(from: self.candidateView.view, to: self.mainView.view, duration: 0.6, options: .curveLinear, completion: { _ in
 				self.candidateView.willMove(toParentViewController: nil)
@@ -224,12 +237,12 @@ class ViewController: UIViewController, UITextFieldDelegate {
 			self.candidateView.view.removeFromSuperview()
 			self.candidateView.removeFromParentViewController()
 			self.candidateView = nil
-
-			self.resultView = ResultViewController(result:result)
-			self.addChildViewController(self.resultView)
-			self.view.addSubview(self.resultView.view)
-			self.resultView.didMove(toParentViewController: self)
 		}
+        self.resultView = ResultViewController(result:result)
+        self.addChildViewController(self.resultView)
+        self.view.addSubview(self.resultView.view)
+        self.resultView.didMove(toParentViewController: self)
+
     }
 	
 	
@@ -249,7 +262,7 @@ class ViewController: UIViewController, UITextFieldDelegate {
 		else if sender.direction == .left {
 		}
 	}
-	
+    
 	func panGesture(_ sender: UIPanGestureRecognizer) {
 		
 		if (sender.state == .began) {
@@ -280,6 +293,16 @@ class ViewController: UIViewController, UITextFieldDelegate {
 		}
 		return
     }
+    
+    
+    // ボタンクリック時の動作
+    @objc func settingButtonTapped(sender: AnyObject) {
+        let settingViewController: SettingViewController = SettingViewController()
+        // アニメーションを設定する.
+        settingViewController.modalTransitionStyle = .flipHorizontal
+        // Viewの移動する.
+        self.present(settingViewController, animated: true, completion: nil)
+    }
 	
 	// MARK:UITextFieldDelegate
 	// キーボードを閉じる
@@ -290,7 +313,9 @@ class ViewController: UIViewController, UITextFieldDelegate {
 }
 
 extension ViewController: ConnectionDelegate {
-	func done() {
+    func done(list: [[String: String]]) {
+        self.message.recvText = list
+        
 		// 付箋たちを出す
 		self.searchedPosition()
 	}
