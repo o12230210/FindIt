@@ -40,7 +40,8 @@
 		171EC56D1FB7E32900E37809 /* Message.swift in Sources */ = {isa = PBXBuildFile; fileRef = 171EC56C1FB7E32900E37809 /* Message.swift */; };
 		171EC5711FB7E67400E37809 /* 1510320026274.png in Resources */ = {isa = PBXBuildFile; fileRef = 171EC5701FB7E67400E37809 /* 1510320026274.png */; };
 		17A8A5CB1FBB9D47004FE12B /* SettingIcon.png in Resources */ = {isa = PBXBuildFile; fileRef = 17A8A5CA1FBB9D47004FE12B /* SettingIcon.png */; };
-		17A8A5CD1FBBA069004FE12B /* SettingVireController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17A8A5CC1FBBA069004FE12B /* SettingVireController.swift */; };
+		17A8A5CD1FBBA069004FE12B /* SettingConfigViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17A8A5CC1FBBA069004FE12B /* SettingConfigViewController.swift */; };
+		17F769961FBDC6DF001E50A0 /* SettingViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17F769951FBDC6DF001E50A0 /* SettingViewController.swift */; };
 		27B7FB821FB48BF1008364EF /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27B7FB811FB48BF1008364EF /* AppDelegate.swift */; };
 		27B7FB841FB48BF1008364EF /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27B7FB831FB48BF1008364EF /* ViewController.swift */; };
 		27B7FB871FB48BF1008364EF /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 27B7FB851FB48BF1008364EF /* Main.storyboard */; };
@@ -88,7 +89,8 @@
 		171EC56C1FB7E32900E37809 /* Message.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Message.swift; sourceTree = "<group>"; };
 		171EC5701FB7E67400E37809 /* 1510320026274.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = 1510320026274.png; sourceTree = "<group>"; };
 		17A8A5CA1FBB9D47004FE12B /* SettingIcon.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = SettingIcon.png; sourceTree = "<group>"; };
-		17A8A5CC1FBBA069004FE12B /* SettingVireController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingVireController.swift; sourceTree = "<group>"; };
+		17A8A5CC1FBBA069004FE12B /* SettingConfigViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingConfigViewController.swift; sourceTree = "<group>"; };
+		17F769951FBDC6DF001E50A0 /* SettingViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingViewController.swift; sourceTree = "<group>"; };
 		27B7FB7E1FB48BF1008364EF /* FindIt.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = FindIt.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		27B7FB811FB48BF1008364EF /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		27B7FB831FB48BF1008364EF /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
@@ -240,7 +242,8 @@
 				27B7FB831FB48BF1008364EF /* ViewController.swift */,
 				27B7FB9D1FB49EB8008364EF /* CandidateViewController.swift */,
 				B8B8284F1FB93A7B006C4895 /* ResultViewController.swift */,
-				17A8A5CC1FBBA069004FE12B /* SettingVireController.swift */,
+				17A8A5CC1FBBA069004FE12B /* SettingConfigViewController.swift */,
+				17F769951FBDC6DF001E50A0 /* SettingViewController.swift */,
 			);
 			path = View;
 			sourceTree = "<group>";
@@ -399,6 +402,7 @@
 				171EC5551FB6B00100E37809 /* SoundPlayer.swift in Sources */,
 				171EC55C1FB6B00100E37809 /* DesignableButton.swift in Sources */,
 				171EC5561FB6B00100E37809 /* BlurView.swift in Sources */,
+				17F769961FBDC6DF001E50A0 /* SettingViewController.swift in Sources */,
 				171EC5621FB6B00100E37809 /* SpringLabel.swift in Sources */,
 				171EC55A1FB6B00100E37809 /* Misc.swift in Sources */,
 				171EC55D1FB6B00100E37809 /* SpringTextField.swift in Sources */,
@@ -424,7 +428,7 @@
 				171EC56D1FB7E32900E37809 /* Message.swift in Sources */,
 				171EC5631FB6B00100E37809 /* DesignableTextView.swift in Sources */,
 				171EC5691FB6B00100E37809 /* AsyncImageView.swift in Sources */,
-				17A8A5CD1FBBA069004FE12B /* SettingVireController.swift in Sources */,
+				17A8A5CD1FBBA069004FE12B /* SettingConfigViewController.swift in Sources */,
 				171EC5541FB6B00100E37809 /* DesignableLabel.swift in Sources */,
 				171EC5501FB6B00100E37809 /* TransitionZoom.swift in Sources */,
 				B8B828501FB93A7B006C4895 /* ResultViewController.swift in Sources */,
