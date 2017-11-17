@@ -7,71 +7,57 @@
 //
 
 import Foundation
-import Alamofire
-import SwiftyJSON
 
 protocol ConnectionDelegate {
-    func done(list:[[String: String]])
+	func done(data:Data)
 }
 
 class Connection {
 
     var delegate: ConnectionDelegate?
 		
-	func setRecvText(str:String){
-		var recvText = [[String: String]]()
-		
+	func getCandidateList(str:String){
 		let listUrl = "https://kuromusubi.com/findit/?item="
 			+ str.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed)!
-		Alamofire.request(listUrl).responseJSON{ response in
-			
-			if let dict = response.result.value as? Dictionary<String, AnyObject> {
-				// 変数keysにdictのkeyのみを取り出す
-				var keys : Array = Array(dict.keys)
-				// keysを昇順でソートする
-				keys.sort(by:{$0 < $1})
-				let json = JSON(response.result.value)
-                print(json)
-                
-				for i in keys {
-					let id = json[i]["id"].int!
-					let place = json[i]["place"].string!
-                    let placeid = json[i]["placeId"].int!
-					
-                    recvText.append(["id":String(id),"place":place,"placeId":String(placeid)])
-				}
-				
-				print("receiveDone")
 
-                self.delegate?.done(list: recvText)
+		//Implementing URLSession
+		guard let url = URL(string: listUrl) else { return }
+		
+		URLSession.shared.dataTask(with: url) { (data, response, error) in
+			if error != nil {
+				print(error!.localizedDescription)
 			}
-		}
+			
+			guard let data = data else { return }
+
+			self.delegate?.done(data: data)
+			}.resume()
 	}
 
     func getPlaceList() {
-        var recvText = [[String: String]]()
-        
-        let listUrl = "https://kuromusubi.com/findit/?placelist"
-        Alamofire.request(listUrl).responseJSON{ response in
-            
-            if let dict = response.result.value as? Dictionary<String, AnyObject> {
-                // 変数keysにdictのkeyのみを取り出す
-                var keys : Array = Array(dict.keys)
-                // keysを昇順でソートする
-                keys.sort(by:{$0 < $1})
-                let json = JSON(response.result.value)
-                for i in keys {
-                    let id = json[i]["id"].int!
-                    let name = json[i]["name"].string!
-                    
-                    recvText.append(["placeId":String(id),"name":name])
-                }
-                
-                print("receiveDone")
-
-                self.delegate?.done(list:recvText)
-            }
-        }
+//        var recvText = [[String: String]]()
+//
+//        let listUrl = "https://kuromusubi.com/findit/?placelist"
+//        Alamofire.request(listUrl).responseJSON{ response in
+//
+//            if let dict = response.result.value as? Dictionary<String, AnyObject> {
+//                // 変数keysにdictのkeyのみを取り出す
+//                var keys : Array = Array(dict.keys)
+//                // keysを昇順でソートする
+//                keys.sort(by:{$0 < $1})
+//                let json = JSON(response.result.value)
+//                for i in keys {
+//                    let id = json[i]["id"].int!
+//                    let name = json[i]["name"].string!
+//
+//                    recvText.append(["placeId":String(id),"name":name])
+//                }
+//
+//                print("receiveDone")
+//
+//                self.delegate?.done(list:recvText)
+//            }
+//        }
     }
 
     

@@ -14,32 +14,31 @@ import RealmSwift
 
 class SettingConfigViewController: UIViewController {
 
+	private var itemField = UITextField()
+	private var nameField = UITextField()
+	
     override func viewDidLoad() {
         super.viewDidLoad()
         // Do any additional setup after loading the view, typically from a nib.
 
-       self.view.backgroundColor = .white
+		self.view.backgroundColor = .white
+
+		self.itemField.frame = CGRect(x:0, y:viewSize.labelHeight, width:self.view.bounds.width/4*3, height:viewSize.fieldHeight)
+		self.itemField.borderStyle = .roundedRect
+		self.view.addSubview(self.itemField)
+		//        self.itemField.delegate = self
+		
+		self.nameField.frame = CGRect(x:0, y:viewSize.labelHeight+50, width:self.view.bounds.width/4*3, height:viewSize.fieldHeight)
+		self.nameField.borderStyle = .roundedRect
+		self.view.addSubview(self.nameField)
+		//        self.nameField.delegate = self
+		
+
+		
         let label = UILabel()
         label.text = "Setting"
         label.sizeToFit()
         label.center = self.view.center
-
-        let data = LocalData()
-        data.id = 0
-        data.placeId = 9
-        data.name = "私のベッド"
-
-        addData(data: data)
-
-        let realm = try! Realm()
-
-        // Realmに保存されてるDog型のオブジェクトを全て取得
-        let dogs = realm.objects(LocalData.self)
-
-        // ためしに名前を表示
-        for dog in dogs {
-            print("name: \(dog.name)")
-        }
 
         view.addSubview(label)
     }

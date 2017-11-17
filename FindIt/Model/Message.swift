@@ -8,14 +8,18 @@
 
 import Foundation
 
-class Message {
-    public var sendText = [[String: String]]()
-    public var recvText = [[String: String]]()
-    init(){
-        
-    }
-    
-    func parseFromJson(result:Any){
+struct CandidateList : Codable{
+	var id : Int
+	var place : String
+	var placeId : Int
+}
 
-    }
+class Message {
+	public var candidateList = [CandidateList]()
+	
+	func setCandidateList(data: Data) {
+		let array = try? JSONDecoder().decode([CandidateList].self, from: data)
+		
+		self.candidateList = array!
+	}
 }

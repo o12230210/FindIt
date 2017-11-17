@@ -50,18 +50,6 @@ class SettingViewController: UIViewController {
         self.tableView.dataSource = self
         
         
-        self.itemField.frame = CGRect(x:0, y:viewSize.labelHeight, width:self.view.bounds.width/4*3, height:viewSize.fieldHeight)
-        self.itemField.borderStyle = .roundedRect
-        self.view.addSubview(self.itemField)
-//        self.itemField.delegate = self
-        
-        self.nameField.frame = CGRect(x:0, y:viewSize.labelHeight+50, width:self.view.bounds.width/4*3, height:viewSize.fieldHeight)
-        self.nameField.borderStyle = .roundedRect
-        self.view.addSubview(self.nameField)
-//        self.nameField.delegate = self
-
-
-        
         //データの取得
         let realm = try! Realm()
         // Realmに保存されてるDog型のオブジェクトを全て取得

@@ -1,3 +1,4 @@
+
 //
 //  ViewController.swift
 //  FindIt
@@ -7,9 +8,6 @@
 //
 
 import UIKit
-import Alamofire
-import SwiftyJSON
-
 
 extension UIColor {
     class var theme: UIColor { return #colorLiteral(red: 0.999717176, green: 0.6463285685, blue: 0.007703759708, alpha: 1) }
@@ -84,7 +82,7 @@ class ViewController: UIViewController, UITextFieldDelegate {
 	
     // MARK:function
 	func setRecvText(){
-		self.connection.setRecvText(str: self.field.text!)
+		self.connection.getCandidateList(str: self.field.text!)
 		self.round+=1
 	}
 	
@@ -262,20 +260,6 @@ class ViewController: UIViewController, UITextFieldDelegate {
 		else if sender.direction == .left {
 		}
 	}
-    
-	func panGesture(_ sender: UIPanGestureRecognizer) {
-		
-		if (sender.state == .began) {
-			self.startSwipe = sender.location(in: self.view)
-		}
-		else if (sender.state == .ended) {
-			self.endSwipe = sender.location(in: self.view)
-			var dx = self.endSwipe.x - self.startSwipe.x
-			var dy = self.endSwipe.y - self.startSwipe.y
-			var distance = sqrt(dx*dx + dy*dy );
-			print(distance)
-		}
-	}
 
 	// ボタンクリック時の動作
     @objc func onClick(_ sender: AnyObject) {
@@ -313,10 +297,12 @@ class ViewController: UIViewController, UITextFieldDelegate {
 }
 
 extension ViewController: ConnectionDelegate {
-    func done(list: [[String: String]]) {
-        self.message.recvText = list
-        
-		// 付箋たちを出す
-		self.searchedPosition()
+	func done(data:Data) {
+		self.message.setCandidateList(data:data)
+		
+		DispatchQueue.main.async {
+			// 付箋たちを出す
+			self.searchedPosition()
+		}
 	}
 }

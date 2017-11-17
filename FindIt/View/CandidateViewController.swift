@@ -124,7 +124,8 @@ extension CandidateViewController: KolodaViewDelegate {
 extension CandidateViewController: KolodaViewDataSource {
         
     func kolodaNumberOfCards(_ koloda:KolodaView) -> Int {
-        return self.mainViewController.message.recvText.count
+		print(self.mainViewController.message.candidateList.count)
+        return self.mainViewController.message.candidateList.count
     }
     
     func kolodaSpeedThatCardShouldDrag(_ koloda: KolodaView) -> DragSpeed {
@@ -138,7 +139,7 @@ extension CandidateViewController: KolodaViewDataSource {
 //		view.backgroundColor = .card
 		
         let label = UILabel()
-        label.text = Array(self.mainViewController.message.recvText)[index]["place"]
+		label.text = self.mainViewController.message.candidateList[index].place
 		label.font = label.font.withSize(fontSize.card);
 		label.frame = self.frame
 		label.textAlignment = .center
