@@ -7,6 +7,7 @@
 //
 
 import Foundation
+import RealmSwift
 
 struct CandidateList : Codable{
 	var id : Int
@@ -18,8 +19,27 @@ class Message {
 	public var candidateList = [CandidateList]()
 	
 	func setCandidateList(data: Data) {
-		let array = try? JSONDecoder().decode([CandidateList].self, from: data)
+		let tmp = try? JSONDecoder().decode([CandidateList].self, from: data)
 		
-		self.candidateList = array!
+        let realm = try! Realm()
+        let local = realm.objects(LocalData.self)
+
+        var array = [CandidateList]()
+        
+        // Localのリストと結合
+        for t in tmp! {
+            if (local.filter("placeId=%@",t.placeId).count > 0){
+                for l in local.filter("placeId=%@",t.placeId){
+                    array.append(CandidateList(id: l.id, place: l.name, placeId: l.placeId))
+                }
+            }
+            else{
+                    array.append(t)
+            }
+        }
+        
+        self.candidateList = array
+        
+        print(array)
 	}
 }

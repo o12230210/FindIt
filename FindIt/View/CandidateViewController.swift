@@ -144,6 +144,17 @@ extension CandidateViewController: KolodaViewDataSource {
 		label.frame = self.frame
 		label.textAlignment = .center
         view.addSubview(label)
+  
+        // 画像がある場合
+        let path = NSHomeDirectory() + "/Documents/" + String(self.mainViewController.message.candidateList[index].id) + ".png"
+        if (FileManager().fileExists(atPath: path)){
+            let data =  try! Data.init(contentsOf: URL(fileURLWithPath: path))
+            let image = UIImageView(image:UIImage(data:data))
+            image.frame = CGRect(x:view.frame.origin.x , y:view.center.y, width:view.frame.width, height:view.frame.height/2-10)
+            label.frame = CGRect(x:view.frame.origin.x , y:view.frame.origin.y, width:view.frame.width, height:view.frame.height/2)
+            image.contentMode = .scaleAspectFit
+            view.addSubview(image)
+        }
 		
         return view
     }

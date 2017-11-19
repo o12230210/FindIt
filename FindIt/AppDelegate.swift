@@ -16,6 +16,19 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplicationLaunchOptionsKey: Any]?) -> Bool {
         // Override point for customization after application launch.
+        
+        // ViewControllerを生成する.
+        let myFirstViewController: ViewController = ViewController()
+        
+        // myFirstViewControllerをrootviewに設定し、Navication Controllerを生成する.
+        let myNavigationController: UINavigationController = UINavigationController(rootViewController: myFirstViewController)
+        
+        // rootViewControllerにNavigationControllerを設定する.
+        self.window?.rootViewController = myNavigationController
+                
+        // NavigationControllerを表示する.
+        self.window?.makeKeyAndVisible()
+        
         return true
     }
 

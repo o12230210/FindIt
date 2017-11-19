@@ -39,6 +39,11 @@
 		171EC56B1FB6D1CC00E37809 /* Connection.swift in Sources */ = {isa = PBXBuildFile; fileRef = 171EC56A1FB6D1CC00E37809 /* Connection.swift */; };
 		171EC56D1FB7E32900E37809 /* Message.swift in Sources */ = {isa = PBXBuildFile; fileRef = 171EC56C1FB7E32900E37809 /* Message.swift */; };
 		171EC5711FB7E67400E37809 /* 1510320026274.png in Resources */ = {isa = PBXBuildFile; fileRef = 171EC5701FB7E67400E37809 /* 1510320026274.png */; };
+		178A87201FC191C0006D1FF9 /* ImageNone.png in Resources */ = {isa = PBXBuildFile; fileRef = 178A871F1FC191BF006D1FF9 /* ImageNone.png */; };
+		178A87241FC1AB69006D1FF9 /* Dance.gif in Resources */ = {isa = PBXBuildFile; fileRef = 178A87231FC1AB69006D1FF9 /* Dance.gif */; };
+		178A87261FC1B0CE006D1FF9 /* defeat.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 178A87251FC1B0CE006D1FF9 /* defeat.mp3 */; };
+		178A87281FC1B0D6006D1FF9 /* victory.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 178A87271FC1B0D6006D1FF9 /* victory.mp3 */; };
+		178A872A1FC1B119006D1FF9 /* AVFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 178A87291FC1B10C006D1FF9 /* AVFoundation.framework */; };
 		17A8A5CB1FBB9D47004FE12B /* SettingIcon.png in Resources */ = {isa = PBXBuildFile; fileRef = 17A8A5CA1FBB9D47004FE12B /* SettingIcon.png */; };
 		17A8A5CD1FBBA069004FE12B /* SettingConfigViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17A8A5CC1FBBA069004FE12B /* SettingConfigViewController.swift */; };
 		17F769961FBDC6DF001E50A0 /* SettingViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17F769951FBDC6DF001E50A0 /* SettingViewController.swift */; };
@@ -88,6 +93,11 @@
 		171EC56A1FB6D1CC00E37809 /* Connection.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Connection.swift; sourceTree = "<group>"; };
 		171EC56C1FB7E32900E37809 /* Message.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Message.swift; sourceTree = "<group>"; };
 		171EC5701FB7E67400E37809 /* 1510320026274.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = 1510320026274.png; sourceTree = "<group>"; };
+		178A871F1FC191BF006D1FF9 /* ImageNone.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = ImageNone.png; sourceTree = "<group>"; };
+		178A87231FC1AB69006D1FF9 /* Dance.gif */ = {isa = PBXFileReference; lastKnownFileType = image.gif; path = Dance.gif; sourceTree = "<group>"; };
+		178A87251FC1B0CE006D1FF9 /* defeat.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = defeat.mp3; sourceTree = "<group>"; };
+		178A87271FC1B0D6006D1FF9 /* victory.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = victory.mp3; sourceTree = "<group>"; };
+		178A87291FC1B10C006D1FF9 /* AVFoundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AVFoundation.framework; path = System/Library/Frameworks/AVFoundation.framework; sourceTree = SDKROOT; };
 		17A8A5CA1FBB9D47004FE12B /* SettingIcon.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = SettingIcon.png; sourceTree = "<group>"; };
 		17A8A5CC1FBBA069004FE12B /* SettingConfigViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingConfigViewController.swift; sourceTree = "<group>"; };
 		17F769951FBDC6DF001E50A0 /* SettingViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingViewController.swift; sourceTree = "<group>"; };
@@ -114,6 +124,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				178A872A1FC1B119006D1FF9 /* AVFoundation.framework in Frameworks */,
 				D528FB340C6BF046BC01BDD1 /* Pods_FindIt.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -180,6 +191,10 @@
 			children = (
 				171EC5701FB7E67400E37809 /* 1510320026274.png */,
 				17A8A5CA1FBB9D47004FE12B /* SettingIcon.png */,
+				178A871F1FC191BF006D1FF9 /* ImageNone.png */,
+				178A87231FC1AB69006D1FF9 /* Dance.gif */,
+				178A87251FC1B0CE006D1FF9 /* defeat.mp3 */,
+				178A87271FC1B0D6006D1FF9 /* victory.mp3 */,
 			);
 			path = Images;
 			sourceTree = "<group>";
@@ -251,6 +266,7 @@
 		DFD3133DADA5008F3826EDC7 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				178A87291FC1B10C006D1FF9 /* AVFoundation.framework */,
 				6926856F4079692F5D9B3A94 /* Pods_FindIt.framework */,
 			);
 			name = Frameworks;
@@ -291,7 +307,7 @@
 				TargetAttributes = {
 					27B7FB7D1FB48BF1008364EF = {
 						CreatedOnToolsVersion = 9.1;
-						ProvisioningStyle = Automatic;
+						ProvisioningStyle = Manual;
 					};
 				};
 			};
@@ -324,8 +340,12 @@
 				27B7FB8C1FB48BF1008364EF /* LaunchScreen.storyboard in Resources */,
 				171EC5681FB6B00100E37809 /* Info.plist in Resources */,
 				27B7FB891FB48BF1008364EF /* Assets.xcassets in Resources */,
+				178A87281FC1B0D6006D1FF9 /* victory.mp3 in Resources */,
 				27B7FB871FB48BF1008364EF /* Main.storyboard in Resources */,
+				178A87261FC1B0CE006D1FF9 /* defeat.mp3 in Resources */,
 				171EC5611FB6B00100E37809 /* LoadingView.xib in Resources */,
+				178A87241FC1AB69006D1FF9 /* Dance.gif in Resources */,
+				178A87201FC191C0006D1FF9 /* ImageNone.png in Resources */,
 				171EC5711FB7E67400E37809 /* 1510320026274.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -348,7 +368,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n";
+			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
 			showEnvVarsInLog = 0;
 		};
 		6152B6AAEE7B3316C1843565 /* [CP] Copy Pods Resources */ = {
@@ -373,16 +393,18 @@
 			);
 			inputPaths = (
 				"${SRCROOT}/Pods/Target Support Files/Pods-FindIt/Pods-FindIt-frameworks.sh",
-				"${BUILT_PRODUCTS_DIR}/Alamofire/Alamofire.framework",
 				"${BUILT_PRODUCTS_DIR}/Koloda/Koloda.framework",
-				"${BUILT_PRODUCTS_DIR}/SwiftyJSON/SwiftyJSON.framework",
+				"${BUILT_PRODUCTS_DIR}/Realm/Realm.framework",
+				"${BUILT_PRODUCTS_DIR}/RealmSwift/RealmSwift.framework",
+				"${BUILT_PRODUCTS_DIR}/SwiftGifOrigin/SwiftGifOrigin.framework",
 				"${BUILT_PRODUCTS_DIR}/pop/pop.framework",
 			);
 			name = "[CP] Embed Pods Frameworks";
 			outputPaths = (
-				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/Alamofire.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/Koloda.framework",
-				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/SwiftyJSON.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/Realm.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/RealmSwift.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/SwiftGifOrigin.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/pop.framework",
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -583,13 +605,15 @@
 			baseConfigurationReference = 0DDD57BF670EA3D70E585240 /* Pods-FindIt.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				CODE_SIGN_STYLE = Automatic;
-				DEVELOPMENT_TEAM = HUS44GT5UN;
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				CODE_SIGN_STYLE = Manual;
+				DEVELOPMENT_TEAM = "";
 				INFOPLIST_FILE = FindIt/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.hackathon.FindIt;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE_SPECIFIER = "";
 				SWIFT_VERSION = 4.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
@@ -600,13 +624,15 @@
 			baseConfigurationReference = C291109AE330D343B9CA6583 /* Pods-FindIt.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				CODE_SIGN_STYLE = Automatic;
-				DEVELOPMENT_TEAM = HUS44GT5UN;
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				CODE_SIGN_STYLE = Manual;
+				DEVELOPMENT_TEAM = "";
 				INFOPLIST_FILE = FindIt/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.hackathon.FindIt;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE_SPECIFIER = "";
 				SWIFT_VERSION = 4.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};

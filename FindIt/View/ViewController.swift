@@ -56,6 +56,8 @@ class ViewController: UIViewController, UITextFieldDelegate {
     override func viewDidLoad() {
         super.viewDidLoad()
         // Do any additional setup after loading the view, typically from a nib.
+        self.view.backgroundColor = .white
+        
 		self.connection = Connection()
 		self.connection.delegate = self
 		
@@ -73,6 +75,16 @@ class ViewController: UIViewController, UITextFieldDelegate {
 		view.addGestureRecognizer(rightSwipe)
 		view.addGestureRecognizer(leftSwipe)
 
+    }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillDisappear(animated)
+        self.navigationController?.navigationBar.isHidden = true
+    }
+    
+    override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(animated)
+        self.navigationController?.navigationBar.isHidden = false
     }
     
     override func didReceiveMemoryWarning()  {
@@ -170,7 +182,6 @@ class ViewController: UIViewController, UITextFieldDelegate {
 		self.findButton.animate()
 		
         // 設定アイコン
-        // Buttonが画面の中央で横幅いっぱいのサイズになるように設定
         let settingButton = UIButton()
         settingButton.frame = CGRect(x:self.view.frame.size.width-50, y:0,
                               width:30, height:30)
@@ -243,17 +254,12 @@ class ViewController: UIViewController, UITextFieldDelegate {
 
     }
 	
-	
 	// MARK:action
 	// スワイプ時の処理
 	@objc func didSwipe(_ sender: UISwipeGestureRecognizer) {
 		if sender.direction == .right {
-//			let alertController = UIAlertController(title: "test",message: "あきらめて踊ろう", preferredStyle: UIAlertControllerStyle.alert)
-//			let cancelButton = UIAlertAction(title: "CANCEL", style: UIAlertActionStyle.cancel, handler: nil)
-//			alertController.addAction(cancelButton)
-//			present(alertController,animated: true,completion: nil)
 
-			print("didSwipe")
+            print("didSwipe")
 			// 候補表示中のとき
 			self.mainPosition()
 		}
@@ -282,10 +288,13 @@ class ViewController: UIViewController, UITextFieldDelegate {
     // ボタンクリック時の動作
     @objc func settingButtonTapped(sender: AnyObject) {
         let settingViewController: SettingViewController = SettingViewController()
-        // アニメーションを設定する.
-        settingViewController.modalTransitionStyle = .flipHorizontal
-        // Viewの移動する.
-        self.present(settingViewController, animated: true, completion: nil)
+//        // アニメーションを設定する.
+//        settingViewController.modalTransitionStyle = .flipHorizontal
+//        // Viewの移動する.
+//        self.present(settingViewController, animated: true, completion: nil)
+        
+        // SecondViewに移動する.
+        self.navigationController?.pushViewController(settingViewController, animated: true)
     }
 	
 	// MARK:UITextFieldDelegate

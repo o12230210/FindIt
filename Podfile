@@ -10,4 +10,5 @@ target 'FindIt' do
 #  pod 'Alamofire'
 #  pod 'SwiftyJSON'
   pod 'RealmSwift'
+  pod 'SwiftGifOrigin'
 end
