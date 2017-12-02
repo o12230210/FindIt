@@ -28,24 +28,14 @@ struct viewSize  {
     static let fieldHeight : CGFloat = 50
     static let buttonHeight : CGFloat = 45
 	static let labelHeight : CGFloat = 50
-	static let candidateMargin : CGFloat = 10
+	static let candidateMargin : CGFloat = 40
 	static let correctButton : CGFloat = 70	// 丸ばつボタンのサイズ
-
 }
 
 class ViewController: UIViewController, UITextFieldDelegate {
     
-	private var mainView : UIViewController!
-    private var candidateView : CandidateViewController!
-	private var resultView : ResultViewController!
-    
-    private var titleLabel : SpringLabel!
-    private var label : UILabel!
-    private var field : UITextField!
-    private var findButton: SpringButton!
-	
-	private var rightSwipe : UISwipeGestureRecognizer!
-	private var leftSwipe : UISwipeGestureRecognizer!
+    private var field = UITextField()
+    private var findButton = SpringButton()
 	private var startSwipe : CGPoint!
 	private var endSwipe : CGPoint!
 	
@@ -61,20 +51,60 @@ class ViewController: UIViewController, UITextFieldDelegate {
 		self.connection = Connection()
 		self.connection.delegate = self
 		
-        self.mainPosition()
+        // Label
+        let titleLabel = SpringLabel()
+        titleLabel.text = NSLocalizedString("Find It!", comment: "")
+        titleLabel.textAlignment = .center
+        titleLabel.font = titleLabel.font.withSize(fontSize.title_main);
+        titleLabel.frame = CGRect(x:0, y:0, width:self.view.bounds.width, height:self.view.bounds.height/5*2)
+        self.view.addSubview(titleLabel)
         
-		// スワイプ動作の初期化
-		let rightSwipe = UISwipeGestureRecognizer(target: self, action: #selector(ViewController.didSwipe(_:)))
-		rightSwipe.direction = .right
-		
-		let leftSwipe = UISwipeGestureRecognizer(target: self, action:  #selector(ViewController.didSwipe(_:)))
-		leftSwipe.direction = .left
-		
-        
-		// スワイプ動作の追加
-		view.addGestureRecognizer(rightSwipe)
-		view.addGestureRecognizer(leftSwipe)
+        titleLabel.animation = "squeezeDown"
+        titleLabel.animate()
 
+        let label = UILabel()
+        label.frame = CGRect(x:0, y:self.view.bounds.height/5*2-viewSize.fieldHeight, width:0, height:0)
+        label.text = NSLocalizedString("探しものは何ですか?", comment: "")
+        label.font = label.font.withSize(20);
+        label.sizeToFit()
+        label.center.x = self.view.center.x
+        self.view.addSubview(label)
+        
+        self.field.frame = CGRect(x:0, y:self.view.bounds.height/5*2, width:self.view.bounds.width/4*3, height:viewSize.fieldHeight)
+        self.field.borderStyle = .roundedRect
+        self.field.textAlignment = .center
+        self.field.center.x = self.view.center.x
+                
+        self.view.addSubview(self.field)
+        self.field.delegate = self
+ 
+        // ボタン
+        self.findButton.setTitle(NSLocalizedString("検索", comment: ""), for: .normal)
+        self.findButton.setTitle(NSLocalizedString("検索中", comment: ""), for: .selected)
+
+        self.findButton.layer.masksToBounds = true
+        self.findButton.layer.cornerRadius = 10.0
+        self.findButton.setTitleColor(.white, for: .normal)
+        self.findButton.frame = CGRect(x:0, y:self.view.bounds.height/5*3, width:self.view.bounds.width/3*2, height:viewSize.buttonHeight)
+        self.findButton.center.x = self.view.center.x
+        self.findButton.backgroundColor = .theme
+        self.findButton.addTarget(self, action: #selector(ViewController.onClick(_:)), for:.touchUpInside)
+        view.addSubview(self.findButton)
+        
+        //   通常
+        self.findButton.animation = "squeezeUp"
+        self.findButton.animate()
+        
+        // 設定アイコン
+        let settingButton = UIButton()
+        settingButton.frame = CGRect(x:self.view.frame.size.width-50, y:50,
+                                     width:30, height:30)
+        settingButton.setImage(UIImage(named: "SettingIcon"), for: .normal)
+        settingButton.imageView?.contentMode = .scaleAspectFit
+        self.view.addSubview(settingButton)
+        
+        // タップされたときのactionをセット
+        settingButton.addTarget(self, action: #selector(ViewController.settingButtonTapped(sender:)), for: .touchUpInside)
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -84,7 +114,7 @@ class ViewController: UIViewController, UITextFieldDelegate {
     
     override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
-        self.navigationController?.navigationBar.isHidden = false
+        self.field.resignFirstResponder()
     }
     
     override func didReceiveMemoryWarning()  {
@@ -98,201 +128,85 @@ class ViewController: UIViewController, UITextFieldDelegate {
 		self.round+=1
 	}
 	
-    // 選択肢をだすビューを表示
-    private func addCandidateView(){
-        // 古いビューを削除
-        if(self.candidateView != nil) {
-			self.candidateView.view.removeFromSuperview()
-            self.candidateView.removeFromParentViewController()
-            self.candidateView = nil
-        }
-        
-        // コンテナに追加
-		self.candidateView = CandidateViewController(mainViewController:self)
-		self.candidateView.view.frame = CGRect(x:viewSize.candidateMargin , y:self.view.bounds.size.height/6, width:self.view.bounds.size.width-viewSize.candidateMargin*2, height:self.view.bounds.size.height/6*4)
-		addChildViewController(self.candidateView)
-        view.addSubview(self.candidateView.view)
-        self.candidateView.didMove(toParentViewController: self)
-		
-        return
-    }
-    
-    
-    private func mainPosition(){
-        // Label
-        if(self.titleLabel == nil){
-            self.titleLabel = SpringLabel()
-            self.titleLabel.text = NSLocalizedString("Find It!", comment: "")
-            self.titleLabel.textAlignment = .center
-            self.view.addSubview(self.titleLabel)
-        }
-		self.titleLabel.font = self.titleLabel.font.withSize(fontSize.title_main);
-		self.titleLabel.frame = CGRect(x:0, y:0, width:self.view.bounds.width, height:self.view.bounds.height/5*2)
-        
-        if(self.mainView == nil){
-			self.mainView = UIViewController()
-            self.mainView.view.frame = CGRect(x: 0,y: self.view.bounds.height/5*2, width:self.view.bounds.width, height:self.view.bounds.height/5*1)
-			self.view.addSubview(self.mainView.view)
-            // Label
-            if(self.label == nil){
-                self.label = UILabel()
-                self.label.frame = CGRect(x:0, y:0, width:self.view.bounds.width, height:viewSize.labelHeight)
-                self.label.text = NSLocalizedString("探しものは何ですか?", comment: "")
-                self.label.font = self.label.font.withSize(20);
-                self.label.textAlignment = .center
-                self.mainView.view.addSubview(self.label)
-            }
-			self.titleLabel.animation = "squeezeDown"
-			self.titleLabel.animate()
-			
-            // テキストフィールド
-            if(self.field == nil){
-                self.field = UITextField()
-                self.field.frame = CGRect(x:0, y:viewSize.labelHeight, width:self.view.bounds.width/4*3, height:viewSize.fieldHeight)
-                self.field.borderStyle = .roundedRect
-                self.field.textAlignment = .center
-				self.field.center.x = self.view.center.x
-
-				self.mainView.view.addSubview(self.field)
-                self.field.delegate = self
-            }
-        } else {
-            self.mainView.view.isHidden = false
-        }
-        
-        // ボタン
-        if(self.findButton == nil){
-            self.findButton = SpringButton()
-            self.findButton.layer.masksToBounds = true
-            self.findButton.layer.cornerRadius = 10.0
-            self.findButton.tag = 1
-            self.findButton.setTitleColor(.white, for: .normal)
-            
-            self.findButton.addTarget(self, action: #selector(ViewController.onClick(_:)), for:.touchUpInside)
-            self.view.addSubview(self.findButton)
-        } else {
-            self.findButton.isHidden = false
-        }
-        self.findButton.frame = CGRect(x:0, y:self.view.bounds.height/5*3, width:self.view.bounds.width/3*2, height:viewSize.buttonHeight)
-		self.findButton.center.x = self.view.center.x
-		self.findButton.backgroundColor = .theme
-        //   通常
-        self.findButton.setTitle(NSLocalizedString("検索", comment: ""), for: .normal)
-		self.findButton.animation = "squeezeUp"
-		self.findButton.animate()
-		
-        // 設定アイコン
-        let settingButton = UIButton()
-        settingButton.frame = CGRect(x:self.view.frame.size.width-50, y:0,
-                              width:30, height:30)
-        settingButton.setImage(UIImage(named: "SettingIcon"), for: .normal)
-        settingButton.imageView?.contentMode = .scaleAspectFit
-        self.mainView.view.addSubview(settingButton)
-        
-        // タップされたときのactionをセット
-        settingButton.addTarget(self, action: #selector(ViewController.settingButtonTapped(sender:)), for: .touchUpInside)
-
-        // いらないビューが出ていたら削除
-		if(self.candidateView != nil) {
-			UIView.transition(from: self.candidateView.view, to: self.mainView.view, duration: 0.6, options: .curveLinear, completion: { _ in
-				self.candidateView.willMove(toParentViewController: nil)
-				self.candidateView.view.removeFromSuperview()
-				self.candidateView.removeFromParentViewController()
-				self.candidateView = nil
-			})
-		}
-		
-		if(self.resultView != nil) {
-			self.resultView.view.removeFromSuperview()
-			self.resultView.removeFromParentViewController()
-			self.resultView = nil
-		}
-	}
-    
-    private func candidatePosition(){
-        self.mainView.view.isHidden = true
-        
-        self.titleLabel.frame = CGRect(x:0, y:0, width:self.view.bounds.width, height:self.view.bounds.height/6)
-        self.titleLabel.font = self.titleLabel.font.withSize(30);
-        self.titleLabel.animation = "slideUp"
-        self.titleLabel.animate()
-        
-        //   ボタンを検索中にする　→
-        self.findButton.frame = CGRect(x:0, y:self.view.bounds.height/7*6, width:self.view.bounds.width/3*2, height:viewSize.fieldHeight)
-		self.findButton.center.x = self.view.center.x
-        self.findButton.setTitle(NSLocalizedString("検索中", comment: ""), for: .normal)
-        self.findButton.animation = "slideDown"
-        self.findButton.animate()
-        self.findButton.backgroundColor = .theme_sub
-		
-    }
-    
-    private func searchedPosition(){
-		self.mainView.view.isHidden = true
-		
-        //   ボタンをあきらめるにする
-        self.findButton.setTitle(NSLocalizedString("あきらめる", comment: ""), for: .normal)
-
-		self.addCandidateView()
-    }
-    
-    public func ResultPosition(result: Bool) {
-		self.mainView.view.isHidden = true
-		
-		if (self.candidateView != nil) {
-			// ★情報の送信
-			
-			self.findButton.isHidden = true
-			self.candidateView.view.removeFromSuperview()
-			self.candidateView.removeFromParentViewController()
-			self.candidateView = nil
-		}
-        self.resultView = ResultViewController(result:result)
-        self.addChildViewController(self.resultView)
-        self.view.addSubview(self.resultView.view)
-        self.resultView.didMove(toParentViewController: self)
-
-    }
+//    // 選択肢をだすビューを表示
+//    private func addCandidateView(){
+//        // 古いビューを削除
+//        if(self.candidateView != nil) {
+//            self.candidateView.view.removeFromSuperview()
+//            self.candidateView.removeFromParentViewController()
+//            self.candidateView = nil
+//        }
+//
+//        // コンテナに追加
+//        self.candidateView = CandidateViewController(mainViewController:self)
+//        self.candidateView.view.frame = CGRect(x:viewSize.candidateMargin , y:self.view.bounds.size.height/6, width:self.view.bounds.size.width-viewSize.candidateMargin*2, height:self.view.bounds.size.height/6*4)
+//        addChildViewController(self.candidateView)
+//        view.addSubview(self.candidateView.view)
+//        self.candidateView.didMove(toParentViewController: self)
+//
+//        return
+//    }
+//
+//    private func candidatePosition(){
+//        self.mainView.view.isHidden = true
+//
+//        self.titleLabel.frame = CGRect(x:0, y:0, width:self.view.bounds.width, height:self.view.bounds.height/6)
+//        self.titleLabel.font = self.titleLabel.font.withSize(30);
+//        self.titleLabel.animation = "slideUp"
+//        self.titleLabel.animate()
+//
+//        //   ボタンを検索中にする　→
+//        self.findButton.frame = CGRect(x:0, y:self.view.bounds.height/7*6, width:self.view.bounds.width/3*2, height:viewSize.fieldHeight)
+//        self.findButton.center.x = self.view.center.x
+//        self.findButton.setTitle(NSLocalizedString("検索中", comment: ""), for: .normal)
+//        self.findButton.animation = "slideDown"
+//        self.findButton.animate()
+//        self.findButton.backgroundColor = .theme_sub
+//
+//    }
+//
+//    private func searchedPosition(){
+//        self.mainView.view.isHidden = true
+//
+//        //   ボタンをあきらめるにする
+//        self.findButton.setTitle(NSLocalizedString("あきらめる", comment: ""), for: .normal)
+//
+//        self.addCandidateView()
+//    }
+//
+//    public func ResultPosition(result: Bool) {
+//        self.mainView.view.isHidden = true
+//
+//        if (self.candidateView != nil) {
+//            // ★情報の送信
+//
+//            self.findButton.isHidden = true
+//            self.candidateView.view.removeFromSuperview()
+//            self.candidateView.removeFromParentViewController()
+//            self.candidateView = nil
+//        }
+//        self.resultView = ResultViewController(result:result)
+//        self.addChildViewController(self.resultView)
+//        self.view.addSubview(self.resultView.view)
+//        self.resultView.didMove(toParentViewController: self)
+//
+//    }
 	
 	// MARK:action
-	// スワイプ時の処理
-	@objc func didSwipe(_ sender: UISwipeGestureRecognizer) {
-		if sender.direction == .right {
-
-            print("didSwipe")
-			// 候補表示中のとき
-			self.mainPosition()
-		}
-		else if sender.direction == .left {
-		}
-	}
 
 	// ボタンクリック時の動作
     @objc func onClick(_ sender: AnyObject) {
-		
-		// メイン画面
-		if (self.candidateView == nil) {
-			// 表示を変更
-			self.candidatePosition()
-			// 検索開始
-			self.setRecvText()
-		}
-		else {
-			// 候補表示中
-			self.ResultPosition(result: false)
-		}
+        // ★検索中にする
+        self.findButton.isSelected = true
+        
+        // 検索開始
+        self.setRecvText()
 		return
     }
-    
     
     // ボタンクリック時の動作
     @objc func settingButtonTapped(sender: AnyObject) {
         let settingViewController: SettingViewController = SettingViewController()
-//        // アニメーションを設定する.
-//        settingViewController.modalTransitionStyle = .flipHorizontal
-//        // Viewの移動する.
-//        self.present(settingViewController, animated: true, completion: nil)
-        
         // SecondViewに移動する.
         self.navigationController?.pushViewController(settingViewController, animated: true)
     }
@@ -310,8 +224,11 @@ extension ViewController: ConnectionDelegate {
 		self.message.setCandidateList(data:data)
 		
 		DispatchQueue.main.async {
-			// 付箋たちを出す
-			self.searchedPosition()
-		}
+            self.findButton.isSelected = false
+            
+            let candidateViewController = CandidateViewController(mainViewController:self)
+            // SecondViewに移動する.
+            self.navigationController?.pushViewController(candidateViewController, animated: true)
+        }
 	}
 }

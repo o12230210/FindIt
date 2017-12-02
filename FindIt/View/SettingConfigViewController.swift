@@ -100,6 +100,11 @@ class SettingConfigViewController: UIViewController, UITextFieldDelegate {
         // タップされたときのactionをセット
         self.imageButton.addTarget(self, action: #selector(SettingConfigViewController.imageButtonTapped(sender:)), for: .touchUpInside)
     }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        self.viewWillAppear(animated)
+        self.navigationController?.navigationBar.isHidden = false
+    }
 
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
@@ -145,7 +150,6 @@ class SettingConfigViewController: UIViewController, UITextFieldDelegate {
             realm.add(data, update: true)  // データが無ければ追加、あったら上書き
         }
 
-        
         // 画像の保存
         if(self.image != nil) {
             let path: String = NSHomeDirectory() + "/Documents/" + String(self.id) + ".png"
@@ -153,7 +157,7 @@ class SettingConfigViewController: UIViewController, UITextFieldDelegate {
             let jpgImageData = UIImageJPEGRepresentation(self.image!,0.8)
             let result = try! jpgImageData!.write(to:URL(fileURLWithPath: path))
         }
-        
+
         let alertController = UIAlertController(title: "保存しました",message: "", preferredStyle: UIAlertControllerStyle.alert)
         let cancelButton = UIAlertAction(title: "OK", style: UIAlertActionStyle.default, handler: {
             (action:UIAlertAction!) -> Void in

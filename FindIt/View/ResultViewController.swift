@@ -28,16 +28,8 @@ class ResultViewController: UIViewController {
 	override func viewDidLoad() {
 		super.viewDidLoad()
 		// Do any additional setup after loading the view, typically from a nib.
-		
-//        let label = UILabel()
-//        label.text = "♪♫ ✌('ω'✌ )三✌('ω')✌三( ✌'ω')✌ ♫♪"
-//        label.sizeToFit()
-//        label.center = self.view.center
-//
-//        if (!result){
-//            label.text = "٩(๑`^´๑)۶༄༅༄༅༄༅༄༅"
-//        }
-//        self.view.addSubview(label)
+
+        self.view.backgroundColor = .white
         
         // ローカルに保存されているgifファイルを指定
         //let imageView = UIImageView(frame: self.view.frame)
@@ -54,7 +46,7 @@ class ResultViewController: UIViewController {
         // 再生する audio ファイルのパスを取得
         
         let audioPath = Bundle.main.path(forResource: self.result ? "victory" : "defeat", ofType:"mp3")!
-        let audioUrl = URL(fileURLWithPath: audioPath.tild)
+        let audioUrl = URL(fileURLWithPath: audioPath)
         
         // auido を再生するプレイヤーを作成する
         var audioError:NSError?
@@ -81,6 +73,12 @@ class ResultViewController: UIViewController {
 		super.didReceiveMemoryWarning()
 		// Dispose of any resources that can be recreated.
 	}
+    
+    override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(animated);
+        
+        self.navigationController?.popToRootViewController(animated: true)
+    }
 	
 	// MARK:function
 	

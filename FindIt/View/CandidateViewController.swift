@@ -14,7 +14,7 @@ class CandidateViewController: UIViewController {
     
     var mainViewController : ViewController!
     
-	private var kolodaView : KolodaView!
+    private var kolodaView : KolodaView!
 	private let OKbutton = UIButton()
 	private let NGbutton = UIButton()
 	
@@ -38,13 +38,22 @@ class CandidateViewController: UIViewController {
         super.viewDidLoad()
         // Do any additional setup after loading the view, typically from a nib.
         
-//        self.view.backgroundColor = .red
-		self.frame = CGRect(x:viewSize.candidateMargin, y:0, width:self.view.frame.size.width-viewSize.candidateMargin*4, height:self.view.frame.size.width-viewSize.candidateMargin*4)
-		
-		self.kolodaView = KolodaView()
+        self.view.backgroundColor = .white
+        
+        let titleLabel = SpringLabel()
+        titleLabel.frame = CGRect(x:0, y:0, width:self.view.bounds.width, height:self.view.bounds.height/6)
+        titleLabel.text = NSLocalizedString("Find It!", comment: "")
+        titleLabel.font = titleLabel.font.withSize(30)
+        titleLabel.textAlignment = .center
+        self.view.addSubview(titleLabel)
+        titleLabel.animation = "slideDown"
+        titleLabel.animate()
+        
+        self.kolodaView = KolodaView()
         self.view.addSubview(kolodaView)
-        kolodaView.frame = self.frame
-			//		kolodaView.center = self.view.center
+        let cardSize = self.view.frame.width - viewSize.candidateMargin
+        kolodaView.frame = CGRect(x:0, y:self.view.bounds.height/5, width:cardSize, height:cardSize)
+        kolodaView.center.x = self.view.center.x
 //		kolodaView.widthAnchor.constraint(equalTo:self.view.widthAnchor, constant: -10.0).isActive = true
 		kolodaView.layer.shadowColor = UIColor.gray.cgColor        // シャドウカラー
 		kolodaView.layer.shadowOffset = CGSize(width:1, height:1);        //  シャドウサイズ
@@ -53,7 +62,7 @@ class CandidateViewController: UIViewController {
         kolodaView.dataSource = self
         kolodaView.delegate = self
 		
-		OKbutton.frame = CGRect(x:self.view.frame.size.width/2+10, y:self.view.frame.size.width-viewSize.candidateMargin*4+35, width:viewSize.correctButton, height:viewSize.correctButton)
+		OKbutton.frame = CGRect(x:self.view.frame.size.width/2+10, y:(self.view.frame.size.height + cardSize + 5) / 2, width:viewSize.correctButton, height:viewSize.correctButton)
 		OKbutton.setTitle(NSLocalizedString("⚪︎", comment: ""), for: .normal)
 		OKbutton.setTitleColor(.OKbutton, for: .normal)
 		OKbutton.titleLabel?.font = OKbutton.titleLabel?.font.withSize(fontSize.correctButton);
@@ -62,7 +71,7 @@ class CandidateViewController: UIViewController {
 		OKbutton.addTarget(self, action: #selector(CandidateViewController.onOKClick(_:)), for:.touchUpInside)
 		self.view.addSubview(OKbutton)
 
-		NGbutton.frame = CGRect(x:self.view.frame.size.width/2-viewSize.correctButton-20, y:self.view.frame.size.width-viewSize.candidateMargin*4+30, width:viewSize.correctButton, height:viewSize.correctButton)
+		NGbutton.frame = CGRect(x:self.view.frame.size.width/2-viewSize.correctButton-20, y:(self.view.frame.size.height + cardSize) / 2, width:viewSize.correctButton, height:viewSize.correctButton)
 		NGbutton.setTitle(NSLocalizedString("×", comment: ""), for: .normal)
 		NGbutton.setTitleColor(.NGbutton, for: .normal)
 		NGbutton.titleLabel?.font = NGbutton.titleLabel?.font.withSize(fontSize.correctButton);
@@ -70,12 +79,33 @@ class CandidateViewController: UIViewController {
 		NGbutton.titleLabel?.baselineAdjustment = .alignCenters;
 		NGbutton.addTarget(self, action: #selector(CandidateViewController.onNGClick(_:)), for:.touchUpInside)
 		self.view.addSubview(NGbutton)
+        
+        // ボタン
+        let giveupButton = SpringButton()
+        giveupButton.setTitle(NSLocalizedString("あきらめる", comment: ""), for: .normal)
+        
+        giveupButton.layer.masksToBounds = true
+        giveupButton.layer.cornerRadius = 10.0
+        giveupButton.setTitleColor(.white, for: .normal)
+        giveupButton.frame = CGRect(x:0, y:self.view.bounds.height/5*4, width:self.view.bounds.width/3*2, height:viewSize.buttonHeight)
+        giveupButton.center.x = self.view.center.x
+        giveupButton.backgroundColor = .theme_sub
+        giveupButton.addTarget(self, action: #selector(CandidateViewController.onClick(_:)), for:.touchUpInside)
+        view.addSubview(giveupButton)
+        
+        //   通常
+        giveupButton.animation = "squeezeUp"
+        giveupButton.animate()
+        
     }
-	
+
+    @objc func onClick(_ sender: AnyObject) {
+        self.navigationController?.popViewController(animated: true)
+    }
+    
 	@objc func onOKClick(_ sender: AnyObject) {
-//		self.kolodaView.swipe(_:.right, force: false)
-		self.mainViewController.ResultPosition(result:true)
-	}
+        self.OK();
+    }
 	@objc func onNGClick(_ sender: AnyObject) {
 		self.kolodaView.swipe(_:.left, force: false)
 	}
@@ -87,6 +117,10 @@ class CandidateViewController: UIViewController {
     }
     
     // MARK:function
+    func OK(){
+        let viewController = ResultViewController(result:true)
+        self.navigationController?.pushViewController(viewController, animated: true)
+    }
     
     // MARK:action
 }
@@ -109,10 +143,12 @@ extension CandidateViewController: KolodaViewDelegate {
         switch direction {
         case .right:
 			print("Swiped to right! : あった")
-			self.mainViewController.ResultPosition(result:true)
+            self.OK();
+            break;
+            
         case .left:
 			print("Swiped to left! : なかった")
-//			self.mainViewController.ResultPosition(result:false)
+            break;
 			
         default:
             return
@@ -141,7 +177,7 @@ extension CandidateViewController: KolodaViewDataSource {
         let label = UILabel()
 		label.text = self.mainViewController.message.candidateList[index].place
 		label.font = label.font.withSize(fontSize.card);
-		label.frame = self.frame
+		label.frame = view.frame
 		label.textAlignment = .center
         view.addSubview(label)
   
